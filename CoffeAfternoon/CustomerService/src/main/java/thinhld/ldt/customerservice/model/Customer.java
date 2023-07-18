@@ -2,13 +2,10 @@ package thinhld.ldt.customerservice.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import thinhld.ldt.customerservice.controller.CustomerController;
-
-import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "t_cuscomer"
+@Table(name = "t_customer"
         , indexes = {@Index(name = "idx_phoneNumber", columnList = "phoneNumber")}
 )
 public class Customer {

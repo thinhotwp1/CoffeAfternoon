@@ -2,7 +2,6 @@ package thinhld.ldt.customerservice.controller;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import thinhld.ldt.customerservice.conmon.Message;
@@ -17,9 +16,11 @@ public class CustomerController {
     public static String userNameCurrent = "";
     public static int role = 0;
 
+    private final CustomerService customerService;
 
-    @Autowired
-    CustomerService customerService;
+    public CustomerController(CustomerService customerService) {
+        this.customerService = customerService;
+    }
 
     @RabbitListener(queues = "queue.user")
     private void receiveFromA(Message message) {
