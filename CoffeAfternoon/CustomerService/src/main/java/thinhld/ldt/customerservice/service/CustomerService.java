@@ -31,7 +31,10 @@ public class CustomerService {
     @Autowired
     CustomerRepo customerRepo;
 
-
+    /**
+     * @return list Customer in database
+     * @apiNote API get all customer:
+     */
     public ResponseEntity<?> getAllCustomer() {
         try {
             CustomerResponse customerResponse = new CustomerResponse();
@@ -128,11 +131,18 @@ public class CustomerService {
     }
 
 
-    public ResponseEntity<?> findCustomersByPhone(CustomerRequest request) {
+    /**
+     * @param customerRequest
+     * @return list customer if success or error if exception
+     */
+    public ResponseEntity<?> findCustomersByPhone(CustomerRequest customerRequest) {
         try {
-            return new ResponseEntity<>(customerRepo.findAllByIsDeleteFalse(), HttpStatus.OK);
+            CustomerResponse customerResponse = new CustomerResponse();
+            log.info("Find all customer by phone number data: " + customerRepo.findAllByPhoneNumberContainsAndIsDeleteFalse(customerRequest.getPhoneNumber()));
+            return new ResponseEntity<>(customerResponse.convertDTO(customerRepo.findAllByPhoneNumberContainsAndIsDeleteFalse(customerRequest.getPhoneNumber())), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>("Xảy ra lỗi trong quá trình lấy list khách hàng", HttpStatus.OK);
+            log.info("Find all customer by name error: " + e);
+            return new ResponseEntity<>("Lỗi trong quá trình tìm kiếm khách hàng !\nDetail: " + e, HttpStatus.EXPECTATION_FAILED);
         }
     }
 }
