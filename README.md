@@ -1,5 +1,18 @@
 # CoffeAfternoon
 
+Yêu cầu cài đặt các service:
+
+#Java 17
+
+#Mysql:
+user: blog, pass: blog
+database: coffeafternoon
+
+#RabbitMQ:
+Service running
+http://localhost:15672 is running
+
+
 a, Xác định yêu cầu (Được triển khai với microservice với các module chính sau, sẽ cập nhật ):
 
 1. Module quản lý người dùng ( hội viên đăng ký vé tháng hoặc khách mua vé lẻ hàng ngày, mua vé lẻ có thể không cần quản lý ).

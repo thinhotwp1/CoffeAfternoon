@@ -1,6 +1,10 @@
 package thinhld.ldt.customerservice.model;
 
 import lombok.Data;
+import thinhld.ldt.customerservice.controller.CustomerController;
+
+import java.util.Date;
+
 
 @Data
 public class CustomerRequest {    
@@ -14,6 +18,10 @@ public class CustomerRequest {
         customer.setCustomerName(request.getCustomerName());
         customer.setType(request.getType());
         customer.setPhoneNumber(request.getPhoneNumber());
+        Date date = new Date();
+        Long currentTime = date.getTime();
+        customer.setLastUpdate(currentTime.toString());
+        customer.setUserCurrent(CustomerController.userNameCurrent);
         return customer;
     }
 }

@@ -1,7 +1,7 @@
 package thinhld.ldt.userservice.conmon;
 
 
-import lombok.*;
+import lombok.Data;
 
 @Data
 public class Message {

@@ -14,6 +14,7 @@ import thinhld.ldt.customerservice.model.CustomerRequest;
 import thinhld.ldt.customerservice.repository.CustomerRepo;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static thinhld.ldt.customerservice.config.RabbitMQConfiguration.ROUTING_USER;
@@ -81,7 +82,7 @@ public class CustomerService {
             return new ResponseEntity<>("Không tìm thấy customer với số điện thoại: " + customerRequest.getPhoneNumber(), HttpStatus.EXPECTATION_FAILED);
         } catch (Exception e) {
             log.info("Delete Customer fail: " + e);
-            return new ResponseEntity<>("User sign up fail ! ", HttpStatus.EXPECTATION_FAILED);
+            return new ResponseEntity<>("Có lỗi trong quá trình xóa khách hàng ! \nDetail: " + e, HttpStatus.EXPECTATION_FAILED);
         }
     }
 

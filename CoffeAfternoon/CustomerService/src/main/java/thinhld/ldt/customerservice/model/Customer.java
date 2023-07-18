@@ -18,6 +18,10 @@ public class Customer {
     private int type;
     @Column(name = "isDelete")
     private boolean isDelete = false;
+    @Column(name = "lastUpdate")
+    private String lastUpdate ;
+    @Column(name = "userCurrent")
+    private String userCurrent ;
 
     public Customer() {
     }
