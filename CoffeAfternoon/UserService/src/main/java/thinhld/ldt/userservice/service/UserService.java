@@ -35,7 +35,7 @@ public class UserService {
     /**
      *
      * @param userRequest
-     * @apiNote API đăng ký tài khoản
+     * @apiNote API đăng ký tài khoản => Send user current tới các service khác
      * @return user đã đăng ký nếu thành công hoặc error nếu thất bại
      */
     public ResponseEntity<?> signIn(UserRequest userRequest) {
@@ -43,7 +43,11 @@ public class UserService {
             User user = userRepo.findUserByUserName(userRequest.getUser());
             if (userRequest.getPass().equals(user.getPassword())) {
                 log.info("User sign In: " + user);
-                sendRabbit(user.getUserName());
+
+                //send user current
+                Message message = new Message();
+                message.setRole(user.getType());
+                sendRabbit(message);
                 return new ResponseEntity<>(user, HttpStatus.OK);
             }
         } catch (Exception ignored) {
@@ -77,13 +81,20 @@ public class UserService {
         return new ResponseEntity<>("User sign up fail ! ", HttpStatus.EXPECTATION_FAILED);
     }
 
-    void sendRabbit(String data) {
-        Message message = new Message();
+
+    /**
+     * @apiNote send message rabbit to another service
+     * @param message
+     */
+    void sendRabbit(Message message) {
         message.setTopic("User Service");
-        message.setUser(data);
         rabbitTemplate.convertAndSend(user_exchange.getName(), ROUTING_USER, message);
     }
 
+    /**
+     *
+      * @return all User
+     */
     public List<User> getAllUser() {
         return userRepo.findAll();
     }

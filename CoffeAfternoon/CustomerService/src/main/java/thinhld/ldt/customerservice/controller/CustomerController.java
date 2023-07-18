@@ -15,6 +15,8 @@ import thinhld.ldt.customerservice.service.CustomerService;
 @Log4j2
 public class CustomerController {
     public static String userNameCurrent = "";
+    public static int role = 0;
+
 
     @Autowired
     CustomerService customerService;
@@ -22,6 +24,7 @@ public class CustomerController {
     @RabbitListener(queues = "queue.user")
     private void receiveFromA(Message message) {
         userNameCurrent = message.getUser();
+        role = message.getRole();
         log.info("User current: " + userNameCurrent);
     }
 

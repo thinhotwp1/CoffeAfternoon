@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import thinhld.ldt.customerservice.conmon.Message;
 import thinhld.ldt.customerservice.model.Customer;
 import thinhld.ldt.customerservice.model.CustomerRequest;
+import thinhld.ldt.customerservice.model.CustomerResponse;
 import thinhld.ldt.customerservice.repository.CustomerRepo;
 
 import java.util.ArrayList;
@@ -33,7 +34,8 @@ public class CustomerService {
 
     public ResponseEntity<?> getAllCustomer() {
         try {
-            return new ResponseEntity<>(customerRepo.findAllByIsDeleteFalse(), HttpStatus.OK);
+            CustomerResponse customerResponse = new CustomerResponse();
+            return new ResponseEntity<>(customerResponse.convertDTO(customerRepo.findAllByIsDeleteFalse()), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("Xảy ra lỗi trong quá trình lấy list khách hàng", HttpStatus.OK);
         }
@@ -116,8 +118,9 @@ public class CustomerService {
      */
     public ResponseEntity<?> findCustomersByName(CustomerRequest customerRequest) {
         try {
+            CustomerResponse customerResponse = new CustomerResponse();
             log.info("Find all customer by name data: " + customerRepo.findAllByCustomerNameContainsAndIsDeleteFalse(customerRequest.getCustomerName()));
-            return new ResponseEntity<>(customerRepo.findAllByCustomerNameContainsAndIsDeleteFalse(customerRequest.getCustomerName()), HttpStatus.OK);
+            return new ResponseEntity<>(customerResponse.convertDTO(customerRepo.findAllByCustomerNameContainsAndIsDeleteFalse(customerRequest.getCustomerName())), HttpStatus.OK);
         } catch (Exception e) {
             log.info("Find all customer by name error: " + e);
             return new ResponseEntity<>("Lỗi trong quá trình tìm kiếm khách hàng !\nDetail: " + e, HttpStatus.EXPECTATION_FAILED);

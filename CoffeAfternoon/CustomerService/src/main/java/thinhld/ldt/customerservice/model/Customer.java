@@ -2,6 +2,9 @@ package thinhld.ldt.customerservice.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import thinhld.ldt.customerservice.controller.CustomerController;
+
+import java.util.Date;
 
 @Data
 @Entity
@@ -18,6 +21,8 @@ public class Customer {
     private int type;
     @Column(name = "isDelete")
     private boolean isDelete = false;
+    @Column(name = "lastComing")
+    private String lastComing ; // lần cuối đến sử dụng dịch vụ, sau này làm báo cáo
     @Column(name = "lastUpdate")
     private String lastUpdate ;
     @Column(name = "userCurrent")
