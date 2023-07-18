@@ -1,0 +1,16 @@
+package thinhld.ldt.customerservice.conmon;
+
+public enum CustomerType {
+    MONTHLY_GUEST(0),
+    DAY_GUEST(1);
+
+    private final int value;
+
+    private CustomerType(int value) {
+        this.value = value;
+    }
+
+    public int getValue() {
+        return value;
+    }
+}
