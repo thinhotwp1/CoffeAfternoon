@@ -13,6 +13,8 @@ public interface CustomerRepo extends JpaRepository<Customer, String> {
 
     List<Customer> findAllByIsDeleteFalse();
 
+    List<Customer> findAllByIsDeleteTrue();
+
     List<Customer> findAllByCustomerNameContainsAndIsDeleteFalse(String name);
 
     List<Customer> findAllByPhoneNumberContainsAndIsDeleteFalse(String phone);

@@ -1,6 +1,7 @@
 package thinhld.ldt.customerservice.model;
 
 import lombok.Data;
+import org.modelmapper.ModelMapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,7 @@ public class CustomerResponse {
     public CustomerResponse() {
     }
 
-    public CustomerResponse(String phoneNumber, String customerName, int type , String lastUpdate, String userCurrent, String lastComing) {
+    public CustomerResponse(String phoneNumber, String customerName, int type, String lastUpdate, String userCurrent, String lastComing) {
         this.phoneNumber = phoneNumber;
         this.customerName = customerName;
         this.type = type;
@@ -27,11 +28,12 @@ public class CustomerResponse {
         this.lastComing = lastComing;
     }
 
-    public List<CustomerResponse> convertDTO(List<Customer> customers) throws Exception{
+    public List<CustomerResponse> convertDTO(List<Customer> customers) {
         List<CustomerResponse> responses = new ArrayList<>();
-
+        ModelMapper modelMapper = new ModelMapper();
+        // Auto map 2 object
         for (Customer customer : customers) {
-            responses.add(new CustomerResponse(customer.getPhoneNumber(), customer.getCustomerName(), customer.getType(), customer.getLastUpdate(), customer.getUserCurrent(), customer.getLastComing()));
+            responses.add(modelMapper.map(customer, CustomerResponse.class));
         }
         return responses;
     }

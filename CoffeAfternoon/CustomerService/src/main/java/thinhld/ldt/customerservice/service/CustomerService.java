@@ -1,24 +1,18 @@
 package thinhld.ldt.customerservice.service;
 
 import lombok.extern.log4j.Log4j2;
-import org.springframework.amqp.core.DirectExchange;
-import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import thinhld.ldt.customerservice.conmon.Message;
 import thinhld.ldt.customerservice.model.Customer;
 import thinhld.ldt.customerservice.model.CustomerRequest;
 import thinhld.ldt.customerservice.model.CustomerResponse;
 import thinhld.ldt.customerservice.repository.CustomerRepo;
-
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import static thinhld.ldt.customerservice.config.RabbitMQConfiguration.ROUTING_USER;
+
 
 
 @Service
@@ -33,7 +27,7 @@ public class CustomerService {
 
     /**
      * @return list Customer in database
-     * @apiNote API get all customer:
+     * @apiNote API get all customer
      */
     public ResponseEntity<?> getAllCustomer() {
         try {
@@ -130,7 +124,6 @@ public class CustomerService {
         }
     }
 
-
     /**
      * @param customerRequest
      * @return list customer if success or error if exception
@@ -143,6 +136,19 @@ public class CustomerService {
         } catch (Exception e) {
             log.info("Find all customer by name error: " + e);
             return new ResponseEntity<>("Lỗi trong quá trình tìm kiếm khách hàng !\nDetail: " + e, HttpStatus.EXPECTATION_FAILED);
+        }
+    }
+
+    /**
+     * @return list Customer in database
+     * @apiNote API get all customer deleted
+     */
+    public ResponseEntity<?> getAllCustomerDeleted() {
+        try {
+            CustomerResponse customerResponse = new CustomerResponse();
+            return new ResponseEntity<>(customerResponse.convertDTO(customerRepo.findAllByIsDeleteTrue()), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Xảy ra lỗi trong quá trình lấy list khách hàng bị xóa", HttpStatus.OK);
         }
     }
 }

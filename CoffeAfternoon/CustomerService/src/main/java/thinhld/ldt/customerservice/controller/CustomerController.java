@@ -2,31 +2,31 @@ package thinhld.ldt.customerservice.controller;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import thinhld.ldt.customerservice.conmon.Message;
+import thinhld.ldt.customerservice.conmon.UserType;
 import thinhld.ldt.customerservice.model.Customer;
 import thinhld.ldt.customerservice.model.CustomerRequest;
 import thinhld.ldt.customerservice.service.CustomerService;
+
 
 @RestController
 @RequestMapping("/customer")
 @Log4j2
 public class CustomerController {
-    public static String userNameCurrent = "";
-    public static int role = 0;
+    public static String userNameCurrent = "?";     // set default is no user
+    public static int role = 10;                    // set default is no role
 
-    private final CustomerService customerService;
-
-    public CustomerController(CustomerService customerService) {
-        this.customerService = customerService;
-    }
+    @Autowired
+    CustomerService customerService;
 
     @RabbitListener(queues = "queue.user")
     private void receiveFromA(Message message) {
         userNameCurrent = message.getUser();
         role = message.getRole();
-        log.info("User current: " + userNameCurrent);
+        log.info("User current: " + userNameCurrent + ", Role: " + UserType.fromValue(role));
     }
 
     @GetMapping("/test")
@@ -37,6 +37,11 @@ public class CustomerController {
     @GetMapping("/get-all")
     public ResponseEntity<?> getListCustomer() {
         return customerService.getAllCustomer();
+    }
+
+    @GetMapping("/get-all-delete")
+    public ResponseEntity<?> getListCustomerDeleted() {
+        return customerService.getAllCustomerDeleted();
     }
 
     @PostMapping("/find-by-name")
