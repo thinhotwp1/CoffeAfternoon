@@ -75,16 +75,15 @@ public class UserService {
     public ResponseEntity<?> signUn(UserRequest userRequest) {
         try {
             if (userRepo.findAllByUserName(userRequest.getUser()).size() > 0) {
-                return new ResponseEntity<>("User is already register ! ", HttpStatus.ALREADY_REPORTED);
+                return new ResponseEntity<>("Tài khoản này đã được đăng ký ! ", HttpStatus.ALREADY_REPORTED);
             } else {
                 userRepo.save(userRequest.convertDTO(userRequest));
-                return new ResponseEntity<>("User sign up success ! ", HttpStatus.OK);
+                return new ResponseEntity<>("Đăng ký thành công tài khoản " + userRequest.getUser(), HttpStatus.OK);
             }
-
         } catch (Exception e) {
-            log.info(e);
+            log.info("User sign up fail : " + e);
+            return new ResponseEntity<>("Gặp lỗi trình quá trình đăng ký ! \n Detail: " + e, HttpStatus.EXPECTATION_FAILED);
         }
-        return new ResponseEntity<>("User sign up fail ! ", HttpStatus.EXPECTATION_FAILED);
     }
 
 

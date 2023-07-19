@@ -3,12 +3,12 @@ package thinhld.ldt.roomservice.controller;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import thinhld.ldt.roomservice.model.Room;
 import thinhld.ldt.roomservice.model.RoomRequest;
 import thinhld.ldt.roomservice.service.RoomService;
 
 @RestController
 @RequestMapping("/room")
-@Log4j2
 public class RoomController {
     private final RoomService roomService;
 
@@ -32,5 +32,14 @@ public class RoomController {
         return roomService.addRoom(roomRequest);
     }
 
+    @PostMapping("/update")
+    public ResponseEntity<?> updateRoom(@RequestBody Room roomRequest) {
+        return roomService.updateRoom(roomRequest);
+    }
+
+    @PostMapping("/delete")
+    public ResponseEntity<?> deleteRoom(@RequestBody Room roomRequest) {
+        return roomService.deleteRoom(roomRequest);
+    }
 
 }

@@ -14,10 +14,6 @@ public class RoomResponse {
     private boolean isActive = true;
     private List<Bed> beds;
 
-    private boolean isDelete;
-    private String lastUpdate;
-    private String userCurrent;
-
     public RoomResponse() {
     }
 

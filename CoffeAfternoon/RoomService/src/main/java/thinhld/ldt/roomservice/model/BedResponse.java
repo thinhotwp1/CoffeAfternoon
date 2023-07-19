@@ -11,10 +11,6 @@ public class BedResponse {
     private String phoneNumber;
     private String roomName;
     private int type;
-    private boolean isDelete;
-    private String lastUpdate;
-    private String userCurrent;
-    private String lastComing;
 
     public BedResponse() {
     }

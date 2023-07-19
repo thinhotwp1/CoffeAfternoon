@@ -11,7 +11,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/bed")
-@Log4j2
 public class BedController {
 
     @Autowired
