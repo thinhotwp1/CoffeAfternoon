@@ -15,9 +15,9 @@ public class RabbitMQConfiguration {
     public static final String QUEUE_USER = "queue.user";
     public static final String ROUTING_USER = "routing.user";
     public static final String USER_EXCHANGE = "exchange.user";
-    public static final String QUEUE_BED = "queue.bed";
-    public static final String ROUTING_BED = "routing.bed";
-    public static final String BED_EXCHANGE = "exchange.bed";
+    public static final String QUEUE_ROOM = "queue.room";
+    public static final String ROUTING_ROOM = "routing.room";
+    public static final String ROOM_EXCHANGE = "exchange.room";
 
 
     @Bean
@@ -27,7 +27,7 @@ public class RabbitMQConfiguration {
 
     @Bean
     Queue queueB() {
-        return new Queue(QUEUE_BED, false);
+        return new Queue(QUEUE_ROOM, false);
     }
 
     @Bean
@@ -36,8 +36,8 @@ public class RabbitMQConfiguration {
     }
 
     @Bean
-    TopicExchange bed_exchange() {
-        return new TopicExchange(BED_EXCHANGE);
+    TopicExchange room_exchange() {
+        return new TopicExchange(ROOM_EXCHANGE);
     }
 
     //      Topic binding
@@ -48,7 +48,7 @@ public class RabbitMQConfiguration {
 
     @Bean
     Binding bindingBed() {
-        return BindingBuilder.bind(queueB()).to(bed_exchange()).with(ROUTING_BED);
+        return BindingBuilder.bind(queueB()).to(room_exchange()).with(ROUTING_ROOM);
     }
 
     // Dùng chung các hàm convert message và rabbit template

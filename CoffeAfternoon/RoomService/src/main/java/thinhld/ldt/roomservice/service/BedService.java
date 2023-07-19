@@ -8,12 +8,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import thinhld.ldt.roomservice.conmon.Message;
+import thinhld.ldt.roomservice.conmon.config.UserConfig;
 import thinhld.ldt.roomservice.model.Bed;
 import thinhld.ldt.roomservice.model.BedRequest;
 import thinhld.ldt.roomservice.model.BedResponse;
 import thinhld.ldt.roomservice.repository.BedRepo;
 
-import static thinhld.ldt.roomservice.config.RabbitMQConfiguration.ROUTING_BED;
+import static thinhld.ldt.roomservice.config.RabbitMQConfiguration.ROUTING_ROOM;
 
 
 @Service
@@ -24,14 +25,14 @@ public class BedService {
     private RabbitTemplate rabbitTemplate;
 
     @Autowired
-    private TopicExchange bed_exchange;
+    private TopicExchange room_exchange;
 
     @Autowired
     BedRepo bedRepo;
 
     /**
      * @return list Bed in database
-     * @apiNote API get all bed:
+     * @apiNote API get all bed
      */
     public ResponseEntity<?> getAllBed() {
         try {
@@ -52,9 +53,25 @@ public class BedService {
         }
     }
 
+    public ResponseEntity<?> hiredRoom(Bed bedRequest) {
+        try {
+            bedRequest.setUsing(true);
+            bedRepo.saveAndFlush(bedRequest);
+            Message message = new Message();
+            message.setUser(UserConfig.userNameCurrent);
+            message.setRole(UserConfig.role);
+            message.setDescription(Long.toString(bedRequest.getId()));
+            sendRabbit(message);
+            BedResponse bedResponse = new BedResponse();
+            return new ResponseEntity<>(bedResponse.convertDTO(bedRepo.findAllByIsDeleteFalse()), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Xảy ra lỗi trong quá trình lấy danh sách giường !", HttpStatus.OK);
+        }
+    }
+
 
     void sendRabbit(Message message) {
-        message.setTopic("User Service");
-        rabbitTemplate.convertAndSend(bed_exchange.getName(), ROUTING_BED, message);
+        message.setTopic("Room Service");
+        rabbitTemplate.convertAndSend(room_exchange.getName(), ROUTING_ROOM, message);
     }
 }

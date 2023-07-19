@@ -27,6 +27,11 @@ public class BedController {
     }
 
     @PostMapping("/add")
+    public ResponseEntity<?> hiredRoom(@RequestBody Bed bedRequest) {
+        return bedService.hiredRoom(bedRequest);
+    }
+
+    @PostMapping("/add")
     public ResponseEntity<?> addRoom(@RequestBody BedRequest bedRequest) {
         return bedService.addRoom(bedRequest);
     }
