@@ -3,23 +3,32 @@ package thinhld.ldt.roomservice.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Entity
 @Table(name = "t_room"
-        , indexes = {@Index(name = "idx_phoneNumber", columnList = "phoneNumber")}
+        , indexes = {@Index(name = "idx_room", columnList = "id")}
 )
 public class Room {
     @Id
-    @Column(name = "phoneNumber")
-    private String phoneNumber;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private long id;
     @Column(name = "roomName")
     private String roomName;
-    @Column(name = "type")
-    private int type;
+    @Column(name = "bedNumber")
+    private int bedNumber;
+    @Column(name = "isActive")
+    private boolean isActive = true;
+    // one room to many bed
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "room_id")
+    private List<Bed> beds;
+
+    // more manager
     @Column(name = "isDelete")
     private boolean isDelete = false;
-    @Column(name = "lastComing")
-    private String lastComing ; // lần cuối đến sử dụng dịch vụ, sau này làm báo cáo
     @Column(name = "lastUpdate")
     private String lastUpdate ;
     @Column(name = "userCurrent")
@@ -28,10 +37,8 @@ public class Room {
     public Room() {
     }
 
-    public Room(String phoneNumber, String roomName, int type) {
-        this.phoneNumber = phoneNumber;
+    public Room(String roomName, int bedNumber) {
         this.roomName = roomName;
-        this.type = type;
+        this.bedNumber = bedNumber;
     }
-
 }

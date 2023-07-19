@@ -30,47 +30,53 @@ public class UserService {
     private TopicExchange user_exchange;
 
     @Autowired
-    UserRepo userRepo;
+    private UserRepo userRepo;
 
     /**
-     *
      * @param userRequest
-     * @apiNote API đăng ký tài khoản => Send user current tới các service khác
      * @return user đã đăng ký nếu thành công hoặc error nếu thất bại
+     * @apiNote API đăng ký tài khoản => Send user current tới các service khác
      */
     public ResponseEntity<?> signIn(UserRequest userRequest) {
         try {
-            User user = userRepo.findUserByUserName(userRequest.getUser());
+            List<User> userList = userRepo.findUserByUserName(userRequest.getUser());
+            if (userList.size() == 0) {
+                log.info("Not found user with user name: " + userRequest.getUser());
+                return new ResponseEntity<>("Sai tài khoản hoặc mật khẩu", HttpStatus.BAD_REQUEST);
+            }
+            User user = userList.get(0);
             if (userRequest.getPass().equals(user.getPassword())) {
                 log.info("User sign In: " + user);
 
                 //send user current
                 Message message = new Message();
                 message.setRole(user.getType());
+                message.setUser(user.getUserName());
                 sendRabbit(message);
-                return new ResponseEntity<>(user, HttpStatus.OK);
+                return new ResponseEntity<>("Đăng nhập thành công !", HttpStatus.OK);
+
+            } else {
+                log.info("Wrong password or user name");
+                return new ResponseEntity<>("Sai tài khoản hoặc mật khẩu", HttpStatus.BAD_REQUEST);
             }
         } catch (Exception ignored) {
             log.info("Exception sign in: " + ignored);
             return new ResponseEntity<>(ignored, HttpStatus.EXPECTATION_FAILED);
         }
-        log.info("sign In not found user");
-        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
 
     /**
-     *
      * @param userRequest
-     * @apiNote API đăng nhập tài khoản
      * @return thành công hoặc thất bại
+     * @apiNote API đăng nhập tài khoản
      */
 
     public ResponseEntity<?> signUn(UserRequest userRequest) {
         try {
             if (userRepo.findAllByUserName(userRequest.getUser()).size() > 0) {
                 return new ResponseEntity<>("User is already register ! ", HttpStatus.ALREADY_REPORTED);
-            }else {
+            } else {
                 userRepo.save(userRequest.convertDTO(userRequest));
                 return new ResponseEntity<>("User sign up success ! ", HttpStatus.OK);
             }
@@ -83,8 +89,8 @@ public class UserService {
 
 
     /**
-     * @apiNote send message rabbit to another service
      * @param message
+     * @apiNote send message rabbit to another service
      */
     void sendRabbit(Message message) {
         message.setTopic("User Service");
@@ -92,8 +98,7 @@ public class UserService {
     }
 
     /**
-     *
-      * @return all User
+     * @return all User
      */
     public List<User> getAllUser() {
         return userRepo.findAll();

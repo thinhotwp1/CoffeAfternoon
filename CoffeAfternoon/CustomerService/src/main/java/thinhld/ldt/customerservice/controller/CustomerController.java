@@ -16,18 +16,8 @@ import thinhld.ldt.customerservice.service.CustomerService;
 @RequestMapping("/customer")
 @Log4j2
 public class CustomerController {
-    public static String userNameCurrent = "?";     // set default is no user
-    public static int role = 10;                    // set default is no role
-
     @Autowired
     CustomerService customerService;
-
-    @RabbitListener(queues = "queue.user")
-    private void receiveFromA(Message message) {
-        userNameCurrent = message.getUser();
-        role = message.getRole();
-        log.info("User current: " + userNameCurrent + ", Role: " + UserType.fromValue(role));
-    }
 
     @GetMapping("/test")
     public String testAPI() {

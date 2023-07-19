@@ -9,7 +9,7 @@ import lombok.Generated;
 @Table(name = "t_user", uniqueConstraints = {@UniqueConstraint(columnNames = {"userName"})} )
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column(name = "name")
     private String name;

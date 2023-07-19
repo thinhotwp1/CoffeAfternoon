@@ -1,7 +1,8 @@
 package thinhld.ldt.customerservice.model;
 
 import lombok.Data;
-import thinhld.ldt.customerservice.controller.CustomerController;
+import org.modelmapper.ModelMapper;
+import thinhld.ldt.customerservice.conmon.config.UserConfig;
 
 import java.util.Date;
 
@@ -14,14 +15,16 @@ public class CustomerRequest {
     private boolean isDelete;
 
     public Customer convertDTO(CustomerRequest request) {
-        Customer customer = new Customer();
-        customer.setCustomerName(request.getCustomerName());
-        customer.setType(request.getType());
-        customer.setPhoneNumber(request.getPhoneNumber());
+        // Map value CustomerRequest to customer
+        ModelMapper modelMapper = new ModelMapper();
+        Customer customer = modelMapper.map(request, Customer.class);
+
+        // update time and user
         Date date = new Date();
         Long currentTime = date.getTime();
+        customer.setLastComing(currentTime.toString());
         customer.setLastUpdate(currentTime.toString());
-        customer.setUserCurrent(CustomerController.userNameCurrent);
+        customer.setUserCurrent(UserConfig.userNameCurrent);
         return customer;
     }
 }

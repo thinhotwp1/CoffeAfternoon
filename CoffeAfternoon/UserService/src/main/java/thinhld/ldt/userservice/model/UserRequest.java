@@ -1,6 +1,7 @@
 package thinhld.ldt.userservice.model;
 
 import lombok.Data;
+import org.modelmapper.ModelMapper;
 
 @Data
 public class UserRequest {
@@ -9,13 +10,9 @@ public class UserRequest {
     private String pass;
     private int type;
 
-    public User convertDTO(UserRequest request){
-        User user1 = new User();
-        user1.setUserName(request.getUser());
-        user1.setName(request.getName());
-        user1.setPassword(request.getPass());
-        user1.setType(request.getType());
-        return user1;
+    public User convertDTO(UserRequest userRequest){
+        ModelMapper modelMapper = new ModelMapper();
+        return modelMapper.map(userRequest,User.class);
     }
 
 }

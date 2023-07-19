@@ -16,6 +16,7 @@ public class Customer {
     private String customerName;
     @Column(name = "type")
     private int type;
+
     @Column(name = "isDelete")
     private boolean isDelete = false;
     @Column(name = "lastComing")

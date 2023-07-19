@@ -13,4 +13,13 @@ public enum UserType {
     public int getValue() {
         return value;
     }
+    // Return role string
+    public static UserType fromValue(int value) {
+        for (UserType userType : UserType.values()) {
+            if (userType.getValue() == value) {
+                return userType;
+            }
+        }
+        throw new IllegalArgumentException("Invalid value: " + value);
+    }
 }
