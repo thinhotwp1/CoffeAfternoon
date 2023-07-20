@@ -1,13 +1,10 @@
 package thinhld.ldt.roomservice.controller;
 
-import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import thinhld.ldt.roomservice.service.BedService;
 import thinhld.ldt.roomservice.model.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/bed")
@@ -26,9 +23,9 @@ public class BedController {
         return bedService.getAllBed();
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<?> hiredRoom(@RequestBody Bed bedRequest) {
-        return bedService.hiredRoom(bedRequest);
+    @PostMapping("/hire")
+    public ResponseEntity<?> hireRoom(@RequestBody Bed bedRequest) {
+        return bedService.hireRoom(bedRequest);
     }
 
     @PostMapping("/add")

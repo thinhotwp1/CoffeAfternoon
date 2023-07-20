@@ -1,6 +1,5 @@
-package thinhld.ldt.customerservice.conmon;
+package thinhld.ldt.roomservice.conmon.model;
 
-import jakarta.persistence.*;
 import lombok.Data;
 
 @Data

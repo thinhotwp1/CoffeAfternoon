@@ -1,9 +1,5 @@
 package thinhld.ldt.roomservice.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
 import thinhld.ldt.roomservice.conmon.config.UserConfig;

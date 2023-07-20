@@ -1,4 +1,4 @@
-package thinhld.ldt.customerservice.conmon;
+package thinhld.ldt.ticketservice.conmon.model;
 
 public enum UserType {
     USER_ADMIN(0),

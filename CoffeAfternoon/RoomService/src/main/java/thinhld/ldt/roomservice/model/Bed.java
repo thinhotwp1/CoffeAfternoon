@@ -17,8 +17,12 @@ public class Bed {
     private long roomId;
     @Column(name = "bedName")
     private String bedName;
+    @Column(name = "customerId")
+    private String customerId;
 
     // bed using, fixing, need fix
+    @Column(name = "dateTicket")
+    private long dateTicket;
     @Column(name = "needFix")
     private boolean needFix = false;
     @Column(name = "isUsing")
@@ -29,8 +33,6 @@ public class Bed {
     // more manager
     @Column(name = "isDelete")
     private boolean isDelete = false;
-    @Column(name = "lastComing")
-    private String lastComing; // lần cuối đến sử dụng bed này, sau này làm báo cáo
     @Column(name = "lastUpdate")
     private String lastUpdate;
     @Column(name = "userCurrent")

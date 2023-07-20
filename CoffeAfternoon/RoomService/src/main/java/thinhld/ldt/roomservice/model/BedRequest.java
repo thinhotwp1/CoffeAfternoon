@@ -2,7 +2,6 @@ package thinhld.ldt.roomservice.model;
 
 import lombok.Data;
 import thinhld.ldt.roomservice.conmon.config.UserConfig;
-import thinhld.ldt.roomservice.model.Bed;
 
 import java.util.Date;
 

@@ -1,17 +1,24 @@
 package thinhld.ldt.customerservice.service;
 
 import lombok.extern.log4j.Log4j2;
+import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import thinhld.ldt.customerservice.conmon.model.Message;
+import thinhld.ldt.customerservice.conmon.model.TicketMessage;
 import thinhld.ldt.customerservice.model.Customer;
 import thinhld.ldt.customerservice.model.CustomerRequest;
 import thinhld.ldt.customerservice.model.CustomerResponse;
 import thinhld.ldt.customerservice.repository.CustomerRepo;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+
+import static thinhld.ldt.customerservice.config.RabbitMQConfiguration.ROUTING_CUSTOMER;
 
 
 @Service
@@ -20,6 +27,9 @@ public class CustomerService {
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
+
+    @Autowired
+    private TopicExchange customer_exchange;
 
     @Autowired
     CustomerRepo customerRepo;
@@ -48,12 +58,34 @@ public class CustomerService {
         try {
             // validate customer
             if (customerRepo.findAllByPhoneNumberAndIsDeleteFalse(customerRequest.getPhoneNumber()).size() > 0) {
-                log.info("Add Customer: Exited Customer !");
-                return new ResponseEntity<>("Đã tồn tại khách hàng đã đăng ký bằng số điện thoại này ! ", HttpStatus.ALREADY_REPORTED);
+                log.info("Add Customer - Exited Customer with phone number:" + customerRequest.getPhoneNumber());
+                return new ResponseEntity<>("Đã tồn tại khách hàng đã đăng ký bằng số điện thoại " + customerRequest.getPhoneNumber(), HttpStatus.ALREADY_REPORTED);
             }
-            // add customer
-            customerRepo.save(customerRequest.convertDTO(customerRequest));
+            // Add customer
+
+            // Lấy thời gian hiện tại
+            Date currentTime = new Date();
+            // Tạo một đối tượng Calendar và thiết lập thời gian là currentTime
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(currentTime);
+            // Cộng thêm số tháng theo loại vé vào Calendar
+            calendar.add(Calendar.MONTH, customerRequest.getTypeTicket());
+            Customer customer = customerRequest.convertDTO(customerRequest);
+            customer.setDateTicket(calendar);
+
+            customerRepo.save(customer);
             log.info("Success Added Customer: " + customerRequest);
+
+            TicketMessage ticketMessage = new TicketMessage();
+            ticketMessage.setPhoneNumber(customerRequest.getPhoneNumber());
+            ticketMessage.setBedId(customerRequest.getBedId());
+            ticketMessage.setTypeTicket(customerRequest.getTypeTicket());
+
+
+            // Set date ticket
+            ticketMessage.setDateTicket(calendar);
+            sendRabbit(ticketMessage);
+            log.info("Gửi message tới ticket service, data: "+ticketMessage);
             return new ResponseEntity<>("Thêm thành công khách hàng " + customerRequest.getCustomerName() + " với số điện thoại " + customerRequest.getPhoneNumber(), HttpStatus.OK);
 
         } catch (Exception ignored) {
@@ -73,9 +105,15 @@ public class CustomerService {
 
     public ResponseEntity<?> deleteCustomer(Customer customerRequest) {
         try {
-            if (customerRepo.findAllByPhoneNumberAndIsDeleteFalse(customerRequest.getPhoneNumber()).size() > 0) {
-                customerRequest.setDelete(true);
-                return updateCustomer(customerRequest);
+            List<Customer> customerList = customerRepo.findAllByPhoneNumberAndIsDeleteFalse(customerRequest.getPhoneNumber());
+            if ( customerList.size() > 0) {
+                Customer customer = customerList.get(0);
+                Date date = new Date();
+                if (customer.getDateTicket().getTime().after(date)){
+                    customerRequest.setDelete(true);
+                    return updateCustomer(customerRequest);
+                }
+                return new ResponseEntity<>("Không thể xóa khách hàng này vì vé đang còn thời gian !", HttpStatus.EXPECTATION_FAILED);
             }
             return new ResponseEntity<>("Không tìm thấy customer với số điện thoại: " + customerRequest.getPhoneNumber(), HttpStatus.EXPECTATION_FAILED);
         } catch (Exception e) {
@@ -159,14 +197,14 @@ public class CustomerService {
         try {
             for (Customer customerRequest : request) {
                 List<Customer> customerList = customerRepo.findAllByPhoneNumberAndIsDeleteTrue(customerRequest.getPhoneNumber());
-                if(customerList.size()==0){
+                if (customerList.size() == 0) {
                     log.info("Revert Customer: Not found customer with request: " + request);
                     return new ResponseEntity<>("Không tìm thấy customer nào trong danh sách !", HttpStatus.OK);
                 }
-                Customer revertCustomer =customerList.get(0);
+                Customer revertCustomer = customerList.get(0);
                 revertCustomer.setDelete(true);
-                    customerRepo.saveAndFlush(revertCustomer);
-                    log.info("Revert Customer success with phone number: "+revertCustomer.getPhoneNumber());
+                customerRepo.saveAndFlush(revertCustomer);
+                log.info("Revert Customer success with phone number: " + revertCustomer.getPhoneNumber());
             }
             return new ResponseEntity<>("Khôi phục thành công !", HttpStatus.OK);
 
@@ -187,6 +225,7 @@ public class CustomerService {
             return new ResponseEntity<>("Lỗi trong quá trình tìm kiếm khách hàng !\nDetail: " + e, HttpStatus.EXPECTATION_FAILED);
         }
     }
+
     public ResponseEntity<?> findDeletedCustomersByName(CustomerRequest customerRequest) {
         try {
             CustomerResponse customerResponse = new CustomerResponse();
@@ -197,6 +236,10 @@ public class CustomerService {
             log.info("Find all customer by name error: " + e);
             return new ResponseEntity<>("Lỗi trong quá trình tìm kiếm khách hàng !\nDetail: " + e, HttpStatus.EXPECTATION_FAILED);
         }
+    }
+
+    void sendRabbit(TicketMessage message) {
+        rabbitTemplate.convertAndSend(customer_exchange.getName(), ROUTING_CUSTOMER, message);
     }
 
 }

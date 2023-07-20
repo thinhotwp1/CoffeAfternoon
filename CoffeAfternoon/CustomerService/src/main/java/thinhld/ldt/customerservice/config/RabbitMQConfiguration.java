@@ -12,25 +12,25 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfiguration {
 
     // Khai báo các object
-    public static final String QUEUE_USER = "queue.user";
-    public static final String ROUTING_USER = "routing.user";
-    public static final String USER_EXCHANGE = "exchange.user";
+    public static final String QUEUE_CUSTOMER = "queue.customer";
+    public static final String ROUTING_CUSTOMER = "routing.customer";
+    public static final String CUSTOMER_EXCHANGE = "exchange.customer";
 
 
     @Bean
     Queue queueA() {
-        return new Queue(QUEUE_USER, false);
+        return new Queue(QUEUE_CUSTOMER, false);
     }
 
     @Bean
-    TopicExchange user_exchange() {
-        return new TopicExchange(USER_EXCHANGE);
+    TopicExchange customer_exchange() {
+        return new TopicExchange(CUSTOMER_EXCHANGE);
     }
 
     //      DirectExchange binding
     @Bean
     Binding bindingUser() {
-        return BindingBuilder.bind(queueA()).to(user_exchange()).with(ROUTING_USER);
+        return BindingBuilder.bind(queueA()).to(customer_exchange()).with(ROUTING_CUSTOMER);
     }
 
     // Dùng chung các hàm convert message và rabbit template

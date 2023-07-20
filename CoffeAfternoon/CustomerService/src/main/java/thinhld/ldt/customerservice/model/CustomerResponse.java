@@ -1,5 +1,6 @@
 package thinhld.ldt.customerservice.model;
 
+import jakarta.persistence.Column;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
 
@@ -10,22 +11,21 @@ import java.util.List;
 public class CustomerResponse {
     private String phoneNumber;
     private String customerName;
-    private int type;
-    private boolean isDelete;
     private String lastUpdate;
     private String userCurrent;
-    private String lastComing;
+    private int typeTicket;
+    private String bedId;
+    private int ticketId;
 
     public CustomerResponse() {
     }
 
-    public CustomerResponse(String phoneNumber, String customerName, int type, String lastUpdate, String userCurrent, String lastComing) {
+    public CustomerResponse(String phoneNumber, String customerName, int typeTicket, String lastUpdate, String userCurrent ) {
         this.phoneNumber = phoneNumber;
         this.customerName = customerName;
-        this.type = type;
+        this.typeTicket = typeTicket;
         this.lastUpdate = lastUpdate;
         this.userCurrent = userCurrent;
-        this.lastComing = lastComing;
     }
 
     public List<CustomerResponse> convertDTO(List<Customer> customers) {

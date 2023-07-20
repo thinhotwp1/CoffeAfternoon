@@ -1,12 +1,9 @@
 package thinhld.ldt.customerservice.controller;
 
 import lombok.extern.log4j.Log4j2;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import thinhld.ldt.customerservice.conmon.Message;
-import thinhld.ldt.customerservice.conmon.UserType;
 import thinhld.ldt.customerservice.model.Customer;
 import thinhld.ldt.customerservice.model.CustomerRequest;
 import thinhld.ldt.customerservice.service.CustomerService;

@@ -1,4 +1,4 @@
-package thinhld.ldt.customerservice.conmon;
+package thinhld.ldt.customerservice.conmon.model;
 
 
 import lombok.Data;

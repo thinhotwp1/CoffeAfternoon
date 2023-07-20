@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import thinhld.ldt.roomservice.conmon.Message;
+import thinhld.ldt.roomservice.conmon.model.Message;
 import thinhld.ldt.roomservice.conmon.config.UserConfig;
 import thinhld.ldt.roomservice.model.Bed;
 import thinhld.ldt.roomservice.model.BedRequest;
@@ -53,7 +53,7 @@ public class BedService {
         }
     }
 
-    public ResponseEntity<?> hiredRoom(Bed bedRequest) {
+    public ResponseEntity<?> hireRoom(Bed bedRequest) {
         try {
             bedRequest.setUsing(true);
             bedRepo.saveAndFlush(bedRequest);

@@ -1,4 +1,4 @@
-package thinhld.ldt.roomservice.conmon;
+package thinhld.ldt.roomservice.conmon.model;
 
 
 import lombok.Data;

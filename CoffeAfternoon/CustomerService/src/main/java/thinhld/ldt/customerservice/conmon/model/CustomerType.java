@@ -1,4 +1,4 @@
-package thinhld.ldt.roomservice.conmon;
+package thinhld.ldt.customerservice.conmon.model;
 
 public enum CustomerType {
     MONTHLY_GUEST(0),

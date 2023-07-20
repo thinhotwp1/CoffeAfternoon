@@ -11,8 +11,8 @@ import java.util.Date;
 public class CustomerRequest {    
     private String phoneNumber;
     private String customerName;
-    private int type;
-    private boolean isDelete;
+    private int typeTicket;
+    private String bedId;
 
     public Customer convertDTO(CustomerRequest request) {
         // Map value CustomerRequest to customer
@@ -22,7 +22,6 @@ public class CustomerRequest {
         // update time and user
         Date date = new Date();
         Long currentTime = date.getTime();
-        customer.setLastComing(currentTime.toString());
         customer.setLastUpdate(currentTime.toString());
         customer.setUserCurrent(UserConfig.userNameCurrent);
         return customer;
