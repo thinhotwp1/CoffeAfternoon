@@ -52,6 +52,7 @@ public class UserService {
                 Message message = new Message();
                 message.setRole(user.getType());
                 message.setUser(user.getUserName());
+                message.setBranch(user.getBranch());
                 sendRabbit(message);
                 return new ResponseEntity<>("Đăng nhập thành công !", HttpStatus.OK);
 

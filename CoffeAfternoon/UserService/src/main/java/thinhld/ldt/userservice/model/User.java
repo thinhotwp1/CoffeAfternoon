@@ -19,5 +19,7 @@ public class User {
     private String password;
     @Column(name = "type")
     private int type;
+    @Column(name = "branch")
+    private String branch;
 
 }

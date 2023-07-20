@@ -14,6 +14,8 @@ public class Customer {
     private String phoneNumber;
     @Column(name = "customerName")
     private String customerName;
+    @Column(name = "bedId")
+    private String bedId;
     @Column(name = "type")
     private int type;
 

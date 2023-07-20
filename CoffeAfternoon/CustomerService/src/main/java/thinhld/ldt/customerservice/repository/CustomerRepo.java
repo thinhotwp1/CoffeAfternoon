@@ -11,6 +11,8 @@ public interface CustomerRepo extends JpaRepository<Customer, String> {
 
     List<Customer> findAllByPhoneNumberAndIsDeleteFalse(String phoneNumber);
 
+    List<Customer> findAllByPhoneNumberAndIsDeleteTrue(String phoneNumber);
+
     List<Customer> findAllByIsDeleteFalse();
 
     List<Customer> findAllByIsDeleteTrue();
@@ -18,5 +20,8 @@ public interface CustomerRepo extends JpaRepository<Customer, String> {
     List<Customer> findAllByCustomerNameContainsAndIsDeleteFalse(String name);
 
     List<Customer> findAllByPhoneNumberContainsAndIsDeleteFalse(String phone);
+
+    List<Customer> findAllByPhoneNumberContainsAndIsDeleteTrue(String phone);
+    List<Customer> findAllByCustomerNameContainsAndIsDeleteTrue(String phone);
 
 }

@@ -10,9 +10,8 @@ import thinhld.ldt.customerservice.model.Customer;
 import thinhld.ldt.customerservice.model.CustomerRequest;
 import thinhld.ldt.customerservice.model.CustomerResponse;
 import thinhld.ldt.customerservice.repository.CustomerRepo;
+
 import java.util.List;
-
-
 
 
 @Service
@@ -68,8 +67,8 @@ public class CustomerService {
      * @param customerRequest
      * @return success if added or error if error
      * @apiNote API add customer:
-     * Validate exited customer
-     * => Add customer if not exited
+     * set delete is true and set bed id is null
+     * => Delete customer if not exited
      */
 
     public ResponseEntity<?> deleteCustomer(Customer customerRequest) {
@@ -134,7 +133,7 @@ public class CustomerService {
             log.info("Find all customer by phone number data: " + customerRepo.findAllByPhoneNumberContainsAndIsDeleteFalse(customerRequest.getPhoneNumber()));
             return new ResponseEntity<>(customerResponse.convertDTO(customerRepo.findAllByPhoneNumberContainsAndIsDeleteFalse(customerRequest.getPhoneNumber())), HttpStatus.OK);
         } catch (Exception e) {
-            log.info("Find all customer by name error: " + e);
+            log.info("Find all customer by phone number error: " + e);
             return new ResponseEntity<>("Lỗi trong quá trình tìm kiếm khách hàng !\nDetail: " + e, HttpStatus.EXPECTATION_FAILED);
         }
     }
@@ -151,4 +150,53 @@ public class CustomerService {
             return new ResponseEntity<>("Xảy ra lỗi trong quá trình lấy list khách hàng bị xóa", HttpStatus.OK);
         }
     }
+
+    /**
+     * @return revert Customers deleted
+     * @apiNote API revert list customer deleted
+     */
+    public ResponseEntity<?> revertCustomer(List<Customer> request) {
+        try {
+            for (Customer customerRequest : request) {
+                List<Customer> customerList = customerRepo.findAllByPhoneNumberAndIsDeleteTrue(customerRequest.getPhoneNumber());
+                if(customerList.size()==0){
+                    log.info("Revert Customer: Not found customer with request: " + request);
+                    return new ResponseEntity<>("Không tìm thấy customer nào trong danh sách !", HttpStatus.OK);
+                }
+                Customer revertCustomer =customerList.get(0);
+                revertCustomer.setDelete(true);
+                    customerRepo.saveAndFlush(revertCustomer);
+                    log.info("Revert Customer success with phone number: "+revertCustomer.getPhoneNumber());
+            }
+            return new ResponseEntity<>("Khôi phục thành công !", HttpStatus.OK);
+
+        } catch (Exception e) {
+            log.info(e);
+            return new ResponseEntity<>("Xảy ra lỗi trong quá trình khôi phục, vui lòng khôi phục từng khách hàng ! ! \nDetail: " + e, HttpStatus.EXPECTATION_FAILED);
+        }
+    }
+
+    public ResponseEntity<?> findDeletedCustomersByPhone(CustomerRequest customerRequest) {
+        try {
+            CustomerResponse customerResponse = new CustomerResponse();
+            List<CustomerResponse> responses = customerResponse.convertDTO(customerRepo.findAllByPhoneNumberContainsAndIsDeleteTrue(customerRequest.getPhoneNumber()));
+            log.info("Find all customer by phone number data: " + responses);
+            return new ResponseEntity<>(responses, HttpStatus.OK);
+        } catch (Exception e) {
+            log.info("Find all customer by phone number error: " + e);
+            return new ResponseEntity<>("Lỗi trong quá trình tìm kiếm khách hàng !\nDetail: " + e, HttpStatus.EXPECTATION_FAILED);
+        }
+    }
+    public ResponseEntity<?> findDeletedCustomersByName(CustomerRequest customerRequest) {
+        try {
+            CustomerResponse customerResponse = new CustomerResponse();
+            List<CustomerResponse> responses = customerResponse.convertDTO(customerRepo.findAllByCustomerNameContainsAndIsDeleteTrue(customerRequest.getCustomerName()));
+            log.info("Find all customer by customer name data: " + responses);
+            return new ResponseEntity<>(responses, HttpStatus.OK);
+        } catch (Exception e) {
+            log.info("Find all customer by name error: " + e);
+            return new ResponseEntity<>("Lỗi trong quá trình tìm kiếm khách hàng !\nDetail: " + e, HttpStatus.EXPECTATION_FAILED);
+        }
+    }
+
 }

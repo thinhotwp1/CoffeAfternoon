@@ -11,6 +11,8 @@ import thinhld.ldt.customerservice.model.Customer;
 import thinhld.ldt.customerservice.model.CustomerRequest;
 import thinhld.ldt.customerservice.service.CustomerService;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/customer")
@@ -27,11 +29,6 @@ public class CustomerController {
     @GetMapping("/get-all")
     public ResponseEntity<?> getListCustomer() {
         return customerService.getAllCustomer();
-    }
-
-    @GetMapping("/get-all-delete")
-    public ResponseEntity<?> getListCustomerDeleted() {
-        return customerService.getAllCustomerDeleted();
     }
 
     @PostMapping("/find-by-name")
@@ -54,8 +51,25 @@ public class CustomerController {
         return customerService.deleteCustomer(request);
     }
 
+    @GetMapping("/get-all-delete")
+    public ResponseEntity<?> getListCustomerDeleted() {
+        return customerService.getAllCustomerDeleted();
+    }
+    @PostMapping("/find-deleted-by-phone")
+    public ResponseEntity<?> finddeletedCustomersByPhone(@RequestBody CustomerRequest request) {
+        return customerService.findDeletedCustomersByPhone(request);
+    }
+    @PostMapping("/find-deleted-by-name")
+    public ResponseEntity<?> findDeletedCustomersByName(@RequestBody CustomerRequest request) {
+        return customerService.findDeletedCustomersByName(request);
+    }
+    @PostMapping("/revert")
+    public ResponseEntity<?> revertCustomer(@RequestBody List<Customer> request) {
+        return customerService.revertCustomer(request);
+    }
     @PostMapping("/update")
     public ResponseEntity<?> updateCustomer(@RequestBody Customer request) {
         return customerService.updateCustomer(request);
     }
+
 }
