@@ -12,7 +12,7 @@ public class CustomerRequest {
     private String phoneNumber;
     private String customerName;
     private int typeTicket;
-    private String bedId;
+    private Long bedId;
 
     public Customer convertDTO(CustomerRequest request) {
         // Map value CustomerRequest to customer

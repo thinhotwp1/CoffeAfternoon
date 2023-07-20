@@ -2,6 +2,7 @@ package thinhld.ldt.customerservice.service;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -80,12 +81,10 @@ public class CustomerService {
             ticketMessage.setPhoneNumber(customerRequest.getPhoneNumber());
             ticketMessage.setBedId(customerRequest.getBedId());
             ticketMessage.setTypeTicket(customerRequest.getTypeTicket());
-
-
-            // Set date ticket
             ticketMessage.setDateTicket(calendar);
             sendRabbit(ticketMessage);
-            log.info("Gửi message tới ticket service, data: "+ticketMessage);
+            log.info("Gửi message tới ticket service, data: " + ticketMessage);
+
             return new ResponseEntity<>("Thêm thành công khách hàng " + customerRequest.getCustomerName() + " với số điện thoại " + customerRequest.getPhoneNumber(), HttpStatus.OK);
 
         } catch (Exception ignored) {
@@ -106,16 +105,16 @@ public class CustomerService {
     public ResponseEntity<?> deleteCustomer(Customer customerRequest) {
         try {
             List<Customer> customerList = customerRepo.findAllByPhoneNumberAndIsDeleteFalse(customerRequest.getPhoneNumber());
-            if ( customerList.size() > 0) {
+            if (customerList.size() > 0) {
                 Customer customer = customerList.get(0);
                 Date date = new Date();
-                if (customer.getDateTicket().getTime().after(date)){
+                if (customer.getDateTicket().getTime().after(date)) {
                     customerRequest.setDelete(true);
                     return updateCustomer(customerRequest);
                 }
-                return new ResponseEntity<>("Không thể xóa khách hàng này vì vé đang còn thời gian !", HttpStatus.EXPECTATION_FAILED);
+                return new ResponseEntity<>("Không thể xóa khách hàng này vì vé tháng đang còn hạn sử dụng !", HttpStatus.EXPECTATION_FAILED);
             }
-            return new ResponseEntity<>("Không tìm thấy customer với số điện thoại: " + customerRequest.getPhoneNumber(), HttpStatus.EXPECTATION_FAILED);
+            return new ResponseEntity<>("Không tìm thấy khách hàng với số điện thoại: " + customerRequest.getPhoneNumber(), HttpStatus.EXPECTATION_FAILED);
         } catch (Exception e) {
             log.info("Delete Customer fail: " + e);
             return new ResponseEntity<>("Có lỗi trong quá trình xóa khách hàng ! \nDetail: " + e, HttpStatus.EXPECTATION_FAILED);

@@ -7,7 +7,7 @@ import java.util.Calendar;
 @Data
 public class TicketMessage {
     private String phoneNumber;
-    private String bedId;
+    private Long bedId;
     private int typeTicket;
     private Calendar dateTicket;
 }

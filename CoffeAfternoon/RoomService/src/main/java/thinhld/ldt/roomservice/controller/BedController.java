@@ -19,18 +19,18 @@ public class BedController {
     }
 
     @GetMapping("/get-all")
-    public ResponseEntity<?> getListRoom() {
+    public ResponseEntity<?> getAllBed() {
         return bedService.getAllBed();
     }
 
     @PostMapping("/hire")
-    public ResponseEntity<?> hireRoom(@RequestBody Bed bedRequest) {
-        return bedService.hireRoom(bedRequest);
+    public ResponseEntity<?> hireBed(@RequestBody Bed bedRequest) {
+        return bedService.hireBed(bedRequest);
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> addRoom(@RequestBody BedRequest bedRequest) {
-        return bedService.addRoom(bedRequest);
+    public ResponseEntity<?> addBed(@RequestBody BedRequest bedRequest) {
+        return bedService.addBed(bedRequest);
     }
 
 

@@ -10,6 +10,7 @@ import java.util.List;
 public interface BedRepo extends JpaRepository<Bed, Long> {
     
     List<Bed> findAllByIsDeleteFalse();
-    
+
+    Bed findByIdIs(Long id);
 
 }

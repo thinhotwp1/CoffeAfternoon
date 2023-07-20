@@ -3,6 +3,8 @@ package thinhld.ldt.roomservice.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.Calendar;
+
 @Data
 @Entity
 @Table(name = "t_bed"
@@ -22,7 +24,7 @@ public class Bed {
 
     // bed using, fixing, need fix
     @Column(name = "dateTicket")
-    private long dateTicket;
+    private Calendar dateTicket;
     @Column(name = "needFix")
     private boolean needFix = false;
     @Column(name = "isUsing")
