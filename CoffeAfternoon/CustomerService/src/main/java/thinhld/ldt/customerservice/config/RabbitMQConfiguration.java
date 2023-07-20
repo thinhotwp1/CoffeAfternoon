@@ -16,12 +16,15 @@ public class RabbitMQConfiguration {
     public static final String ROUTING_CUSTOMER = "routing.customer";
     public static final String CUSTOMER_EXCHANGE = "exchange.customer";
 
+    // Khai báo các object
+    public static final String QUEUE_USER = "queue.user";
+    public static final String ROUTING_USER= "routing.user";
+    public static final String USER_EXCHANGE = "exchange.user";
 
     @Bean
-    Queue queueA() {
+    Queue queueCustomer() {
         return new Queue(QUEUE_CUSTOMER, false);
     }
-
     @Bean
     TopicExchange customer_exchange() {
         return new TopicExchange(CUSTOMER_EXCHANGE);
@@ -29,9 +32,25 @@ public class RabbitMQConfiguration {
 
     //      DirectExchange binding
     @Bean
-    Binding bindingUser() {
-        return BindingBuilder.bind(queueA()).to(customer_exchange()).with(ROUTING_CUSTOMER);
+    Binding bindingCustomer() {
+        return BindingBuilder.bind(queueCustomer()).to(customer_exchange()).with(ROUTING_CUSTOMER);
     }
+    @Bean
+    Queue queueUser() {
+        return new Queue(QUEUE_USER, false);
+    }
+
+    @Bean
+    TopicExchange user_exchange(){
+        return new TopicExchange(USER_EXCHANGE);
+    }
+
+    //      DirectExchange binding
+    @Bean
+    Binding bindingUser() {
+        return BindingBuilder.bind(queueUser()).to(user_exchange()).with(ROUTING_USER);
+    }
+
 
     // Dùng chung các hàm convert message và rabbit template
     @Bean

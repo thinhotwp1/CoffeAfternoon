@@ -31,7 +31,7 @@ public class TicketService {
 
     private void updateTicketDate(TicketMessage message) {
         try {
-
+            log.info("message: "+ message);
         } catch (Exception e) {
             log.info("Error update ticket date with ticket message from ticket service: " + message);
         }

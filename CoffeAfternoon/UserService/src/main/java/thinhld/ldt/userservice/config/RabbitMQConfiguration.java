@@ -18,7 +18,7 @@ public class RabbitMQConfiguration {
 
 
     @Bean
-    Queue queueA() {
+    Queue queueUser() {
         return new Queue(QUEUE_USER, false);
     }
 
@@ -30,7 +30,7 @@ public class RabbitMQConfiguration {
     //      DirectExchange binding
     @Bean
     Binding bindingUser() {
-        return BindingBuilder.bind(queueA()).to(user_exchange()).with(ROUTING_USER);
+        return BindingBuilder.bind(queueUser()).to(user_exchange()).with(ROUTING_USER);
     }
 
     // Dùng chung các hàm convert message và rabbit template
