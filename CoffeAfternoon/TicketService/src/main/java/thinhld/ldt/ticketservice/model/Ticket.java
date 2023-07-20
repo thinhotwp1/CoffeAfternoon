@@ -7,7 +7,7 @@ import java.util.Calendar;
 
 @Data
 @Entity
-@Table(name = "t_customer"
+@Table(name = "t_ticket"
         , indexes = {@Index(name = "idx_phoneNumber", columnList = "phoneNumber")}
 )
 public class Ticket {
@@ -18,10 +18,8 @@ public class Ticket {
     private String customerName;
     @Column(name = "bedId")
     private String bedId;
-    @Column(name = "ticketId")
-    private int ticketId;
     @Column(name = "typeTicket")
-    private int typeTicket;
+    private int typeTicket;     // int month
     @Column(name = "dateTicket")
     private Calendar dateTicket;
 
@@ -37,19 +35,12 @@ public class Ticket {
 
     @Column(name = "isDelete")
     private boolean isDelete = false;
-    @Column(name = "lastComing")
-    private String lastComing ; // lần cuối đến sử dụng dịch vụ, sau này làm báo cáo
     @Column(name = "lastUpdate")
     private String lastUpdate ;
     @Column(name = "userCurrent")
     private String userCurrent ;
 
     public Ticket() {
-    }
-
-    public Ticket(String phoneNumber, String customerName, int type) {
-        this.phoneNumber = phoneNumber;
-        this.customerName = customerName;
     }
 
 }

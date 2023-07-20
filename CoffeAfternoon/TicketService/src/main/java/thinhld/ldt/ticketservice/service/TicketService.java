@@ -1,6 +1,7 @@
 package thinhld.ldt.ticketservice.service;
 
 import lombok.extern.log4j.Log4j2;
+import org.modelmapper.ModelMapper;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,8 @@ import thinhld.ldt.ticketservice.model.Ticket;
 import thinhld.ldt.ticketservice.model.TicketRequest;
 import thinhld.ldt.ticketservice.model.TicketResponse;
 import thinhld.ldt.ticketservice.repository.TicketRepo;
+
+import java.util.Date;
 
 
 @Service
@@ -26,12 +29,17 @@ public class TicketService {
 
     @RabbitListener(queues = "queue.customer")
     private void receiveFromCustomerService(TicketMessage message) {
-        updateTicketDate(message);
+        addTicketMonth(message);
     }
 
-    private void updateTicketDate(TicketMessage message) {
+    private void addTicketMonth(TicketMessage message) {
         try {
             log.info("message: "+ message);
+            Ticket ticket = new Ticket();
+            ModelMapper modelMapper = new ModelMapper();
+            modelMapper.map(message,Ticket.class);
+            Date date = new Date();
+            ticket.setUserCurrent(date.toString());
         } catch (Exception e) {
             log.info("Error update ticket date with ticket message from ticket service: " + message);
         }

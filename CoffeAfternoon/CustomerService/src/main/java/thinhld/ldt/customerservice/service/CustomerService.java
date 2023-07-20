@@ -1,6 +1,7 @@
 package thinhld.ldt.customerservice.service;
 
 import lombok.extern.log4j.Log4j2;
+import org.modelmapper.ModelMapper;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -78,9 +79,8 @@ public class CustomerService {
             log.info("Success Added Customer: " + customerRequest);
 
             TicketMessage ticketMessage = new TicketMessage();
-            ticketMessage.setPhoneNumber(customerRequest.getPhoneNumber());
-            ticketMessage.setBedId(customerRequest.getBedId());
-            ticketMessage.setTypeTicket(customerRequest.getTypeTicket());
+            ModelMapper modelMapper = new ModelMapper();
+            ticketMessage = modelMapper.map(customer, TicketMessage.class);
             ticketMessage.setDateTicket(calendar);
             sendRabbit(ticketMessage);
             log.info("Gửi message tới ticket service, data: " + ticketMessage);
