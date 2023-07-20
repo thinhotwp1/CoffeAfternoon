@@ -9,6 +9,7 @@ public class UserRequest {
     private String user;
     private String pass;
     private int type;
+    public User convertDTO(UserRequest userRequest){
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(userRequest,User.class);
     }
