@@ -39,13 +39,13 @@ public class UserService {
      */
     public ResponseEntity<?> signIn(UserRequest userRequest) {
         try {
-            List<User> userList = userRepo.findUserByUserName(userRequest.getUser());
+            List<User> userList = userRepo.findUserByUserName(userRequest.getUserName());
             if (userList.size() == 0) {
-                log.info("Not found user with user name: " + userRequest.getUser());
+                log.info("Not found user with user name: " + userRequest.getUserName());
                 return new ResponseEntity<>("Sai tài khoản hoặc mật khẩu", HttpStatus.BAD_REQUEST);
             }
             User user = userList.get(0);
-            if (userRequest.getPass().equals(user.getPassword())) {
+            if (userRequest.getPassword().equals(user.getPassword())) {
                 log.info("User sign In: " + user);
 
                 //send user current
@@ -73,17 +73,18 @@ public class UserService {
      * @apiNote API đăng nhập tài khoản
      */
 
-    public ResponseEntity<?> signUn(UserRequest userRequest) {
+    public ResponseEntity<?> signUp(UserRequest userRequest) {
         try {
-            if (userRepo.findAllByUserName(userRequest.getUser()).size() > 0) {
+            log.info("Sign Up request: " + userRequest);
+            if (userRepo.findAllByUserName(userRequest.getUserName()).size() > 0) {
                 return new ResponseEntity<>("Tài khoản này đã được đăng ký ! ", HttpStatus.ALREADY_REPORTED);
             } else {
                 userRepo.save(userRequest.convertDTO(userRequest));
-                return new ResponseEntity<>("Đăng ký thành công tài khoản " + userRequest.getUser(), HttpStatus.OK);
+                return new ResponseEntity<>("Đăng ký thành công tài khoản " + userRequest.getUserName(), HttpStatus.OK);
             }
         } catch (Exception e) {
             log.info("User sign up fail : " + e);
-            return new ResponseEntity<>("Gặp lỗi trình quá trình đăng ký ! \n Detail: " + e, HttpStatus.EXPECTATION_FAILED);
+            return new ResponseEntity<>("Gặp lỗi trong quá trình đăng ký ! \n Detail: " + e, HttpStatus.EXPECTATION_FAILED);
         }
     }
 

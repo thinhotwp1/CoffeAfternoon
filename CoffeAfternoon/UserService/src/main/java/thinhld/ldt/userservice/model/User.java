@@ -6,15 +6,13 @@ import lombok.Generated;
 
 @Data
 @Entity
-@Table(name = "t_user", uniqueConstraints = {@UniqueConstraint(columnNames = {"userName"})} )
+@Table(name = "t_user" )
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    @Column(name = "name")
-    private String name;
     @Column(name = "userName")
     private String userName;
+    @Column(name = "name")
+    private String name;
     @Column(name = "password")
     private String password;
     @Column(name = "type")

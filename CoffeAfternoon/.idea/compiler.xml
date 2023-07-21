@@ -2,18 +2,20 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="RoomService" />
         <module name="UserService" />
         <module name="MessageService" />
+        <module name="CustomerService" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="CustomerService (1)" target="17" />
       <module name="CustomerService (2)" target="17" />
+      <module name="RoomService" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

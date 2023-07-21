@@ -32,7 +32,7 @@ public class UserController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> signUn(@RequestBody UserRequest request) {
-        return userService.signUn(request);
+        return userService.signUp(request);
     }
 
 }

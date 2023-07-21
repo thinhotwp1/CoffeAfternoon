@@ -1,4 +1,4 @@
-package thinhld.ldt.customerservice.config;
+package thinhld.ldt.bedservice.config;
 
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
@@ -47,21 +47,25 @@ public class RabbitMQConfiguration {
     Queue queueCustomerUser() {
         return new Queue(QUEUE_CUSTOMER_USER, false);
     }
+    
+    // ticket config
     @Bean
     Queue queueTicketUser() {
         return new Queue(QUEUE_TICKET_USER, false);
     }
     @Bean
-    Queue queueBedUser() {
-        return new Queue(QUEUE_BED_USER, false);
-    }
-    @Bean
     Queue queueTicketCustomer() {
         return new Queue(QUEUE_TICKET_CUSTOMER, false);
     }
+
+    // bed config 
     @Bean
     Queue queueBedTicket() {
         return new Queue(QUEUE_BED_TICKET, false);
+    }
+    @Bean
+    Queue queueBedUser() {
+        return new Queue(QUEUE_BED_USER, false);
     }
 
 

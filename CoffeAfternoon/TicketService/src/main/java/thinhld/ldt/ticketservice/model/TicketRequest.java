@@ -22,7 +22,6 @@ public class TicketRequest {
         // update time and user
         Date date = new Date();
         Long currentTime = date.getTime();
-        customer.setLastComing(currentTime.toString());
         customer.setLastUpdate(currentTime.toString());
         customer.setUserCurrent(UserConfig.userNameCurrent);
         return customer;

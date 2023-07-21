@@ -78,18 +78,18 @@ public class CustomerService {
             customerRepo.save(customer);
             log.info("Success Added Customer: " + customerRequest);
 
-            TicketMessage ticketMessage = new TicketMessage();
+            //Map object
             ModelMapper modelMapper = new ModelMapper();
-            ticketMessage = modelMapper.map(customer, TicketMessage.class);
+            TicketMessage ticketMessage = modelMapper.map(customer, TicketMessage.class);
             ticketMessage.setDateTicket(calendar);
             sendRabbit(ticketMessage);
-            log.info("Gửi message tới ticket service, data: " + ticketMessage);
+            log.info("Send message to ticket service, data: " + ticketMessage);
 
             return new ResponseEntity<>("Thêm thành công khách hàng " + customerRequest.getCustomerName() + " với số điện thoại " + customerRequest.getPhoneNumber(), HttpStatus.OK);
 
-        } catch (Exception ignored) {
-            log.info("Exception Added Customer: " + ignored);
-            return new ResponseEntity<>("Có lỗi trong quá trình thêm khách hàng ! \nDetail: " + ignored, HttpStatus.EXPECTATION_FAILED);
+        } catch (Exception e) {
+            log.info("Exception Added Customer: " + e);
+            return new ResponseEntity<>("Có lỗi trong quá trình thêm khách hàng ! \nDetail: " + e, HttpStatus.EXPECTATION_FAILED);
         }
     }
 
@@ -238,6 +238,7 @@ public class CustomerService {
     }
 
     void sendRabbit(TicketMessage message) {
+        message.setTopic("Customer service");
         rabbitTemplate.convertAndSend(customer_exchange.getName(), ROUTING_CUSTOMER, message);
     }
 
