@@ -14,7 +14,13 @@ import thinhld.ldt.bedservice.conmon.model.TicketMessage;
 import thinhld.ldt.bedservice.model.Bed;
 import thinhld.ldt.bedservice.model.BedRequest;
 import thinhld.ldt.bedservice.model.BedResponse;
+import thinhld.ldt.bedservice.model.ListBedHire;
 import thinhld.ldt.bedservice.repository.BedRepo;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 import static thinhld.ldt.bedservice.config.RabbitMQConfiguration.ROUTING_BED;
 
@@ -37,9 +43,7 @@ public class BedService {
     private void updateBedTicket(TicketMessage message) {
         try {
             Bed bed = bedRepo.findByIdIs(message.getBedId());
-            System.out.println("Bed find: " + bed);
             bed.setCustomerId(message.getPhoneNumber());
-            bed.setUsing(true);
             bed.setDateTicket(message.getDateTicket());
             bedRepo.saveAndFlush(bed);
             log.info("Success update bed ticket date with ticket message from ticket service: " + message);
@@ -54,43 +58,66 @@ public class BedService {
      */
     public ResponseEntity<?> getAllBed() {
         try {
-            BedResponse bedResponse = new BedResponse();
-            return new ResponseEntity<>(bedResponse.convertDTO(bedRepo.findAllByIsDeleteFalse()), HttpStatus.OK);
+            List<Bed> bedList = bedRepo.findAllByIsDeleteFalse();
+            ListBedHire listBedHire = new ListBedHire();
+            List<Bed> listActive = new ArrayList<>();
+            List<Bed> listUsed = new ArrayList<>();
+
+            // Get all bed used and active
+            Calendar calendarCurrent = Calendar.getInstance();
+            Date currentTime = new Date();
+            calendarCurrent.setTime(currentTime);
+
+            for (Bed bed : bedList) {
+                if (bed.getDateTicket() != null && bed.getDateTicket().after(calendarCurrent)) {
+                    listUsed.add(bed);
+                } else {
+                    listActive.add(bed);
+                }
+            }
+            listBedHire.setListUsed(listUsed);
+            listBedHire.setListActive(listActive);
+
+            return new ResponseEntity<>(listBedHire, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>("Xảy ra lỗi trong quá trình lấy danh sách giường !", HttpStatus.OK);
+            log.info("Error get all box: " + e);
+            return new ResponseEntity<>("Xảy ra lỗi trong quá trình lấy danh sách giường !", HttpStatus.EXPECTATION_FAILED);
         }
     }
 
     public ResponseEntity<?> addBed(BedRequest bedRequest) {
         try {
             Bed bed = bedRequest.convertDTO(bedRequest);
+            System.out.println("BED: " + bed);
             bedRepo.save(bed);
             return new ResponseEntity<>("Thêm giường " + bed.getBedName() + " thành công !", HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>("Xảy ra lỗi trong quá trình thêm giường !\n Detail: " + e, HttpStatus.OK);
+            log.info("Error add box: " + e);
+            return new ResponseEntity<>("Xảy ra lỗi trong quá trình thêm giường !", HttpStatus.EXPECTATION_FAILED);
         }
     }
 
-//    public ResponseEntity<?> hireBed(Bed bedRequest) {
-//        try {
-//            bedRequest.setUsing(true);
-//            bedRepo.saveAndFlush(bedRequest);
-//
-//            // send message
-//            Message message = new Message();
-//            message.setUser(UserConfig.userNameCurrent);
-//            message.setRole(UserConfig.role);
-//            message.setDescription(Long.toString(bedRequest.getId()));
-//            sendRabbit(message);
-//            return new ResponseEntity<>(bedRequest, HttpStatus.OK);
-//        } catch (Exception e) {
-//            return new ResponseEntity<>("Xảy ra lỗi trong quá trình thuê giường: " + bedRequest.getBedName(), HttpStatus.OK);
-//        }
-//    }
 
+    /**
+     * @return list Bed in database
+     * @apiNote API get all bed
+     */
+    public ResponseEntity<?> hireBed(Bed bedRequest) {
+        try {
+            // set time ticket-day
+            Date currentTime = new Date();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(currentTime);
+            // Cộng thêm số tháng theo loại vé vào Calendar
+            calendar.add(Calendar.HOUR_OF_DAY, 4);
+            bedRequest.setDateTicket(calendar);
+            bedRepo.saveAndFlush(bedRequest);
 
-//    void sendRabbit(Message message) {
-//        message.setTopic("Room Service");
-//        rabbitTemplate.convertAndSend(bed_exchange.getName(), ROUTING_BED, message);
-//    }
+            return new ResponseEntity<>("Thuê thành công box " + bedRequest.getBedName() + ", thời gian sử dụng còn 4 giờ. ", HttpStatus.OK);
+        } catch (Exception e) {
+            log.info("Error hire box: " + e);
+            return new ResponseEntity<>("Xảy ra lỗi trong quá trình thuê box " + bedRequest.getBedName(), HttpStatus.EXPECTATION_FAILED);
+        }
+    }
+
 }

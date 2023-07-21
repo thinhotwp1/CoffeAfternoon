@@ -15,21 +15,23 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfiguration {
 
     // Khai báo các object customer
-    public static final String QUEUE_CUSTOMER = "queue.customer";
+    public static final String QUEUE_CUSTOMER_USER = "queue.customer.user";
     public static final String ROUTING_CUSTOMER = "routing.customer";
     public static final String CUSTOMER_EXCHANGE = "exchange.customer";
 
     // Khai báo các object ticket
-    public static final String QUEUE_TICKET = "queue.ticket";
+    public static final String QUEUE_TICKET_USER = "queue.ticket.user";
+    public static final String QUEUE_TICKET_CUSTOMER = "queue.ticket.customer";
     public static final String ROUTING_TICKET = "routing.ticket";
     public static final String TICKET_EXCHANGE = "exchange.ticket";
 
 
     // Khai báo các object bed
-    public static final String QUEUE_BED = "queue.bed";
+    public static final String QUEUE_BED_TICKET = "queue.bed.ticket";
+    public static final String QUEUE_BED_USER = "queue.bed.user";
     public static final String ROUTING_BED = "routing.bed";
     public static final String BED_EXCHANGE = "exchange.bed";
-
+    
 
     // Khai báo các object user
     public static final String QUEUE_USER = "queue.user";
@@ -42,26 +44,28 @@ public class RabbitMQConfiguration {
      * @implNote Tạo các bean queue
      */
     @Bean
-    Queue queueCustomer() {
-        return new Queue(QUEUE_CUSTOMER, false);
+    Queue queueCustomerUser() {
+        return new Queue(QUEUE_CUSTOMER_USER, false);
     }
-
+    
     // ticket config
     @Bean
-    Queue queueTicket() {
-        return new Queue(QUEUE_TICKET, false);
+    Queue queueTicketUser() {
+        return new Queue(QUEUE_TICKET_USER, false);
+    }
+    @Bean
+    Queue queueTicketCustomer() {
+        return new Queue(QUEUE_TICKET_CUSTOMER, false);
     }
 
-    // bed config
+    // bed config 
     @Bean
-    Queue queueBed() {
-        return new Queue(QUEUE_BED, false);
+    Queue queueBedTicket() {
+        return new Queue(QUEUE_BED_TICKET, false);
     }
-
-    // user config
     @Bean
-    Queue queueUser() {
-        return new Queue(QUEUE_USER, false);
+    Queue queueBedUser() {
+        return new Queue(QUEUE_BED_USER, false);
     }
 
 
@@ -90,27 +94,27 @@ public class RabbitMQConfiguration {
     // Đăng ký queue ticket đăng ký tin nhắn của customer service
     @Bean
     Binding bindingCustomerTicket() {
-        return BindingBuilder.bind(queueTicket()).to(customer_exchange()).with(ROUTING_CUSTOMER);
+        return BindingBuilder.bind(queueTicketCustomer()).to(customer_exchange()).with(ROUTING_CUSTOMER);
     }
 
     // Đăng ký queue bed đăng ký tin nhắn của ticket service
     @Bean
     Binding bindingTicketBed() {
-        return BindingBuilder.bind(queueBed()).to(ticket_exchange()).with(ROUTING_TICKET);
+        return BindingBuilder.bind(queueBedTicket()).to(ticket_exchange()).with(ROUTING_TICKET);
     }
 
     // Cho các service cùng đăng ký với topic user
     @Bean
     Binding bindingUserCustomer() {
-        return BindingBuilder.bind(queueCustomer()).to(user_exchange()).with(ROUTING_USER);
+        return BindingBuilder.bind(queueCustomerUser()).to(user_exchange()).with(ROUTING_USER);
     }
     @Bean
     Binding bindingUserTicket() {
-        return BindingBuilder.bind(queueTicket()).to(user_exchange()).with(ROUTING_USER);
+        return BindingBuilder.bind(queueTicketUser()).to(user_exchange()).with(ROUTING_USER);
     }
     @Bean
     Binding bindingUserBed() {
-        return BindingBuilder.bind(queueBed()).to(user_exchange()).with(ROUTING_USER);
+        return BindingBuilder.bind(queueBedUser()).to(user_exchange()).with(ROUTING_USER);
     }
 
 

@@ -23,10 +23,10 @@ public class BedController {
         return bedService.getAllBed();
     }
 
-//    @PostMapping("/hire")
-//    public ResponseEntity<?> hireBed(@RequestBody Bed bedRequest) {
-//        return bedService.hireBed(bedRequest);
-//    }
+    @PostMapping("/hire")
+    public ResponseEntity<?> hireBed(@RequestBody Bed bedRequest) {
+        return bedService.hireBed(bedRequest);
+    }
 
     @PostMapping("/add")
     public ResponseEntity<?> addBed(@RequestBody BedRequest bedRequest) {
