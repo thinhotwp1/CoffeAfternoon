@@ -4,28 +4,20 @@ import lombok.Data;
 import org.modelmapper.ModelMapper;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 @Data
 public class TicketResponse {
     private String phoneNumber;
     private String customerName;
+    private String bedId;
     private int typeTicket;
-    private boolean isDelete;
+    private Calendar dateTicket;
     private String lastUpdate;
     private String userCurrent;
-    private String lastComing;
 
     public TicketResponse() {
-    }
-
-    public TicketResponse(String phoneNumber, String customerName, int typeTicket, String lastUpdate, String userCurrent, String lastComing) {
-        this.phoneNumber = phoneNumber;
-        this.customerName = customerName;
-        this.typeTicket = typeTicket;
-        this.lastUpdate = lastUpdate;
-        this.userCurrent = userCurrent;
-        this.lastComing = lastComing;
     }
 
     public List<TicketResponse> convertDTO(List<Ticket> customers) {

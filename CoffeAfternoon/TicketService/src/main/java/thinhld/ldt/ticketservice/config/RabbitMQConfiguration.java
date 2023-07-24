@@ -34,7 +34,6 @@ public class RabbitMQConfiguration {
     
 
     // Khai báo các object user
-    public static final String QUEUE_USER = "queue.user";
     public static final String ROUTING_USER= "routing.user";
     public static final String USER_EXCHANGE = "exchange.user";
 

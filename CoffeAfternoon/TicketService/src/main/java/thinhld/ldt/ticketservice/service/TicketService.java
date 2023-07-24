@@ -74,5 +74,4 @@ public class TicketService {
     void sendRabbit(TicketMessage message) {
         rabbitTemplate.convertAndSend(ticket_exchange.getName(), ROUTING_TICKET, message);
     }
-
 }

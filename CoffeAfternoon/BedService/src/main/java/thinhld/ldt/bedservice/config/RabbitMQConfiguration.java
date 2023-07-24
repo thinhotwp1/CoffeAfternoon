@@ -31,7 +31,7 @@ public class RabbitMQConfiguration {
     public static final String QUEUE_BED_USER = "queue.bed.user";
     public static final String ROUTING_BED = "routing.bed";
     public static final String BED_EXCHANGE = "exchange.bed";
-    
+
 
     // Khai báo các object user
     public static final String QUEUE_USER = "queue.user";
@@ -47,7 +47,7 @@ public class RabbitMQConfiguration {
     Queue queueCustomerUser() {
         return new Queue(QUEUE_CUSTOMER_USER, false);
     }
-    
+
     // ticket config
     @Bean
     Queue queueTicketUser() {

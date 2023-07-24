@@ -11,7 +11,7 @@ import thinhld.ldt.messageservice.model.Message;
 public class Consumer {
 
     //Direct exchange
-    @RabbitListener(queues = "queue.user")
+    @RabbitListener(queues = "queue.customer.user")
     private void receiveFromA(Message message){
         log.info("Message recevied from QUEUE USER->{}",message);
     }

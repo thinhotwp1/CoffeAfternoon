@@ -31,10 +31,9 @@ public class RabbitMQConfiguration {
     public static final String QUEUE_BED_USER = "queue.bed.user";
     public static final String ROUTING_BED = "routing.bed";
     public static final String BED_EXCHANGE = "exchange.bed";
-    
+
 
     // Khai báo các object user
-    public static final String QUEUE_USER = "queue.user";
     public static final String ROUTING_USER= "routing.user";
     public static final String USER_EXCHANGE = "exchange.user";
 
@@ -47,7 +46,10 @@ public class RabbitMQConfiguration {
     Queue queueCustomerUser() {
         return new Queue(QUEUE_CUSTOMER_USER, false);
     }
-    
+    @Bean
+    Queue queueBedUser() {
+        return new Queue(QUEUE_BED_USER, false);
+    }
     // ticket config
     @Bean
     Queue queueTicketUser() {
@@ -62,10 +64,6 @@ public class RabbitMQConfiguration {
     @Bean
     Queue queueBedTicket() {
         return new Queue(QUEUE_BED_TICKET, false);
-    }
-    @Bean
-    Queue queueBedUser() {
-        return new Queue(QUEUE_BED_USER, false);
     }
 
 
@@ -132,3 +130,4 @@ public class RabbitMQConfiguration {
         return rabbitTemplate;
     }
 }
+
