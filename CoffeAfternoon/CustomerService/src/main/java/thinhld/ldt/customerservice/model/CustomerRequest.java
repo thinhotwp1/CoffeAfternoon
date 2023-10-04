@@ -1,13 +1,14 @@
 package thinhld.ldt.customerservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
-import thinhld.ldt.customerservice.conmon.config.UserConfig;
 
 import java.util.Date;
 
 
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CustomerRequest {    
     private String phoneNumber;
     private String customerName;
@@ -17,13 +18,6 @@ public class CustomerRequest {
     public Customer convertDTO(CustomerRequest request) {
         // Map value CustomerRequest to customer
         ModelMapper modelMapper = new ModelMapper();
-        Customer customer = modelMapper.map(request, Customer.class);
-
-        // update time and user
-        Date date = new Date();
-        Long currentTime = date.getTime();
-        customer.setLastUpdate(currentTime.toString());
-        customer.setUserCurrent(UserConfig.userNameCurrent);
-        return customer;
+        return modelMapper.map(request, Customer.class);
     }
 }

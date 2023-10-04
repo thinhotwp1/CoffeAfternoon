@@ -8,8 +8,6 @@ import java.util.List;
 
 @Repository
 public interface BedRepo extends JpaRepository<Bed, Long> {
-    
-    List<Bed> findAllByIsDeleteFalse();
 
     Bed findByIdIs(Long id);
 

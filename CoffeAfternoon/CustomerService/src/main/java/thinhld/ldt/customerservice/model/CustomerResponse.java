@@ -5,6 +5,7 @@ import lombok.Data;
 import org.modelmapper.ModelMapper;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 @Data
@@ -16,16 +17,9 @@ public class CustomerResponse {
     private int typeTicket;
     private String bedId;
     private int ticketId;
+    private Calendar dateTicket;
 
     public CustomerResponse() {
-    }
-
-    public CustomerResponse(String phoneNumber, String customerName, int typeTicket, String lastUpdate, String userCurrent ) {
-        this.phoneNumber = phoneNumber;
-        this.customerName = customerName;
-        this.typeTicket = typeTicket;
-        this.lastUpdate = lastUpdate;
-        this.userCurrent = userCurrent;
     }
 
     public List<CustomerResponse> convertDTO(List<Customer> customers) {

@@ -1,7 +1,9 @@
 package thinhld.ldt.bedservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.context.annotation.Lazy;
 
 import java.util.List;
 
@@ -10,7 +12,8 @@ import java.util.List;
 @Table(name = "t_room"
         , indexes = {@Index(name = "idx_room", columnList = "id")}
 )
-public class Room {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Room extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -25,14 +28,6 @@ public class Room {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "room_id")
     private List<Bed> beds;
-
-    // more manager
-    @Column(name = "isDelete")
-    private boolean isDelete = false;
-    @Column(name = "lastUpdate")
-    private String lastUpdate ;
-    @Column(name = "userCurrent")
-    private String userCurrent ;
 
     public Room() {
     }

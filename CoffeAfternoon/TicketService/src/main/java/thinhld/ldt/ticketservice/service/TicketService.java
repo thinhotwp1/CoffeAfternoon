@@ -9,8 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import thinhld.ldt.ticketservice.conmon.config.UserConfig;
 import thinhld.ldt.ticketservice.conmon.model.TicketMessage;
+import thinhld.ldt.ticketservice.log.SystemLog;
+import thinhld.ldt.ticketservice.log.TypeLog;
 import thinhld.ldt.ticketservice.model.Ticket;
 import thinhld.ldt.ticketservice.model.TicketRequest;
 import thinhld.ldt.ticketservice.model.TicketResponse;
@@ -22,7 +23,6 @@ import static thinhld.ldt.ticketservice.config.RabbitMQConfiguration.ROUTING_TIC
 
 
 @Service
-@Log4j2(topic = "TicketService")
 public class TicketService {
 
     @Autowired
@@ -41,20 +41,19 @@ public class TicketService {
 
     private void addTicketMonth(TicketMessage message) {
         try {
-            log.info("message add Ticket Month: " + message);
+            SystemLog.log("message add Ticket Month: " + message, TypeLog.INFO);
             ModelMapper modelMapper = new ModelMapper();
             Ticket ticket = modelMapper.map(message, Ticket.class);
             Date date = new Date();
             ticket.setLastUpdate(date.toString());
-            ticket.setUserCurrent(UserConfig.userNameCurrent);
-            System.out.println("Save ticket: " + ticket);
+            SystemLog.log("Save ticket: " + ticket, TypeLog.INFO);
             ticketRepo.saveAndFlush(ticket);
 
             //send to bed service hire bed success
             sendRabbit(message);
-            log.info("Send message to bed service, data: " + message);
+            SystemLog.log("Send message to bed service, data: " + message, TypeLog.INFO);
         } catch (Exception e) {
-            log.info("Error update ticket date with message from customer service: " + message + "\nDetail error: " + e);
+            e.printStackTrace();
         }
     }
 
@@ -67,6 +66,7 @@ public class TicketService {
             TicketResponse ticketResponse = new TicketResponse();
             return new ResponseEntity<>(ticketResponse.convertDTO(ticketRepo.findAllByIsDeleteFalse()), HttpStatus.OK);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>("Xảy ra lỗi trong quá trình lấy list khách hàng", HttpStatus.OK);
         }
     }

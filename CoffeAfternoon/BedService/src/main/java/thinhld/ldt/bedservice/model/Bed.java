@@ -1,5 +1,6 @@
 package thinhld.ldt.bedservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -10,7 +11,8 @@ import java.util.Calendar;
 @Table(name = "t_bed"
         , indexes = {@Index(name = "idx_bed", columnList = "id")}
 )
-public class Bed {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Bed extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -27,18 +29,9 @@ public class Bed {
     private Calendar dateTicket;
     @Column(name = "needFix")
     private boolean needFix = false;
-    @Column(name = "isUsing")
-    private boolean isUsing = false;
     @Column(name = "isFixing")
     private boolean isFixing = false;
 
-    // more manager
-    @Column(name = "isDelete")
-    private boolean isDelete = false;
-    @Column(name = "lastUpdate")
-    private String lastUpdate;
-    @Column(name = "userCurrent")
-    private String userCurrent;
 
     public Bed() {
     }
@@ -47,4 +40,5 @@ public class Bed {
         this.roomId = roomId;
         this.bedName = bedName;
     }
+
 }

@@ -1,16 +1,20 @@
 package thinhld.ldt.customerservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Calendar;
 
 @Data
 @Entity
+@NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Table(name = "t_customer"
         , indexes = {@Index(name = "idx_phoneNumber", columnList = "phoneNumber")}
 )
-public class Customer {
+public class Customer extends BaseEntity{
     @Id
     @Column(name = "phoneNumber")
     private String phoneNumber;
@@ -34,20 +38,5 @@ public class Customer {
      * 2. from bed service: update phone number to id_customer and date ticket to bed_id
      *
      */
-
-    @Column(name = "isDelete")
-    private boolean isDelete = false;
-    @Column(name = "lastUpdate")
-    private String lastUpdate ;
-    @Column(name = "userCurrent")
-    private String userCurrent ;
-
-    public Customer() {
-    }
-
-    public Customer(String phoneNumber, String customerName, int type) {
-        this.phoneNumber = phoneNumber;
-        this.customerName = customerName;
-    }
 
 }

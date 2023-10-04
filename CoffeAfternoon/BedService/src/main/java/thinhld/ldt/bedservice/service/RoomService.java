@@ -7,8 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import thinhld.ldt.bedservice.model.Room;
-import thinhld.ldt.bedservice.model.RoomRequest;
-import thinhld.ldt.bedservice.model.RoomResponse;
+import thinhld.ldt.bedservice.model.dto.RoomRequest;
+import thinhld.ldt.bedservice.model.dto.RoomResponse;
 import thinhld.ldt.bedservice.repository.RoomRepo;
 
 
@@ -29,8 +29,9 @@ public class RoomService {
     public ResponseEntity<?> getAllRoom() {
         try {
             RoomResponse roomResponse = new RoomResponse();
-            return new ResponseEntity<>(roomResponse.convertDTO(roomRepo.findAllByIsDeleteFalse()), HttpStatus.OK);
+            return new ResponseEntity<>(roomResponse.convertDTO(roomRepo.findAll()), HttpStatus.OK);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>("Xảy ra lỗi trong quá trình lấy danh sách phòng !", HttpStatus.OK);
         }
     }
@@ -46,7 +47,8 @@ public class RoomService {
             roomRepo.save(room);
             return new ResponseEntity<>("Thêm thành công " + roomRequest.getRoomName(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>("Xảy ra lỗi trong quá trình thêm " + roomRequest.getRoomName(), HttpStatus.EXPECTATION_FAILED);
+            e.printStackTrace();
+            return new ResponseEntity<>("Xảy ra lỗi trong quá trình thêm " + roomRequest.getRoomName()+", error: "+e, HttpStatus.EXPECTATION_FAILED);
         }
     }
 
@@ -59,6 +61,7 @@ public class RoomService {
             roomRepo.saveAndFlush(roomRequest);
             return new ResponseEntity<>("Cập nhật thành công " + roomRequest.getRoomName(), HttpStatus.OK);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>("Xảy ra lỗi trong quá trình cập nhật " + roomRequest.getRoomName(), HttpStatus.EXPECTATION_FAILED);
         }
     }
@@ -69,10 +72,10 @@ public class RoomService {
      */
     public ResponseEntity<?> deleteRoom(Room roomRequest) {
         try {
-            roomRequest.setDelete(true);
-            roomRepo.saveAndFlush(roomRequest);
-            return new ResponseEntity<>("Xóa thành công " + roomRequest.getRoomName(), HttpStatus.OK);
+            roomRepo.deleteById(roomRequest.getId());
+            return new ResponseEntity<>("Xóa thành công !" , HttpStatus.OK);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>("Xảy ra lỗi trong quá trình xóa " + roomRequest.getRoomName(), HttpStatus.EXPECTATION_FAILED);
         }
     }

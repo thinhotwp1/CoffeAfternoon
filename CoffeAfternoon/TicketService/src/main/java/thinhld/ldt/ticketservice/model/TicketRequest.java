@@ -1,29 +1,19 @@
 package thinhld.ldt.ticketservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
-import thinhld.ldt.ticketservice.conmon.config.UserConfig;
 
 import java.util.Date;
 
 
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TicketRequest {    
     private String phoneNumber;
     private String customerName;
     private int typeTicket;
     private boolean isDelete;
 
-    public Ticket convertDTO(TicketRequest request) {
-        // Map value TicketRequest to customer
-        ModelMapper modelMapper = new ModelMapper();
-        Ticket customer = modelMapper.map(request, Ticket.class);
 
-        // update time and user
-        Date date = new Date();
-        Long currentTime = date.getTime();
-        customer.setLastUpdate(currentTime.toString());
-        customer.setUserCurrent(UserConfig.userNameCurrent);
-        return customer;
-    }
 }

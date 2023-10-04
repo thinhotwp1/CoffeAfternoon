@@ -1,8 +1,8 @@
-package thinhld.ldt.bedservice.model;
+package thinhld.ldt.bedservice.model.dto;
 
-import jakarta.persistence.Column;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
+import thinhld.ldt.bedservice.model.Bed;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -16,7 +16,6 @@ public class BedResponse {
     private String customerId;
     private Calendar dateTicket;
     private boolean needFix;
-    private boolean isUsing;
     private boolean isFixing;
 
     public BedResponse() {

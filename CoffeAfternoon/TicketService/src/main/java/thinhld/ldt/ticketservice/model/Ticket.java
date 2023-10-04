@@ -1,5 +1,6 @@
 package thinhld.ldt.ticketservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -7,6 +8,7 @@ import java.util.Calendar;
 
 @Data
 @Entity
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Table(name = "t_ticket"
         , indexes = {@Index(name = "idx_phoneNumber", columnList = "phoneNumber")}
 )

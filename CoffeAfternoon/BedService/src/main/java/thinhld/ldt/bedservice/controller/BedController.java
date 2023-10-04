@@ -3,6 +3,7 @@ package thinhld.ldt.bedservice.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import thinhld.ldt.bedservice.model.dto.BedRequest;
 import thinhld.ldt.bedservice.service.BedService;
 import thinhld.ldt.bedservice.model.*;
 

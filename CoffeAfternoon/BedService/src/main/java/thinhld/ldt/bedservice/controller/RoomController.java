@@ -1,25 +1,17 @@
 package thinhld.ldt.bedservice.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import thinhld.ldt.bedservice.model.Room;
-import thinhld.ldt.bedservice.model.RoomRequest;
+import thinhld.ldt.bedservice.model.dto.RoomRequest;
 import thinhld.ldt.bedservice.service.RoomService;
 
 @RestController
 @RequestMapping("/room")
 public class RoomController {
-    private final RoomService roomService;
-
-    public RoomController(RoomService roomService) {
-        this.roomService = roomService;
-    }
-
-
-    @GetMapping("/test")
-    public String testAPI() {
-        return "Success";
-    }
+    @Autowired
+    private RoomService roomService;
 
     @GetMapping("/get-all")
     public ResponseEntity<?> getListRoom() {

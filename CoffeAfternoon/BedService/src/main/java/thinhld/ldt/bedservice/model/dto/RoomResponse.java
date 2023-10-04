@@ -1,7 +1,9 @@
-package thinhld.ldt.bedservice.model;
+package thinhld.ldt.bedservice.model.dto;
 
 import lombok.Data;
 import org.modelmapper.ModelMapper;
+import thinhld.ldt.bedservice.model.Bed;
+import thinhld.ldt.bedservice.model.Room;
 
 import java.util.ArrayList;
 import java.util.List;

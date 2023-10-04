@@ -9,6 +9,5 @@ import java.util.List;
 @Repository
 public interface RoomRepo extends JpaRepository<Room, Long> {
 
-    List<Room> findAllByIsDeleteFalse();
 
 }
