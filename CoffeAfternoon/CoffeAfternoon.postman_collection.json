@@ -10,13 +10,13 @@
 			"name": "UserService",
 			"item": [
 				{
-					"name": "Sing Up",
+					"name": "Sign Up",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\":\"ADMIN\",\n    \"user\":\"admin\",\n    \"pass\":\"Thjnhotwp1@\",\n    \"type\":0\n}",
+							"raw": "{\n    \"name\":\"admin\",\n    \"userName\":\"admin\",\n    \"password\":\"Thjnhotwp1@\",\n    \"type\":0,\n    \"branch\":\"44 Lê Ngọc Hân\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -39,13 +39,13 @@
 					"response": []
 				},
 				{
-					"name": "Sing In",
+					"name": "Sign In",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"user\":\"admin\",\n    \"pass\":\"Thjnhotwp1@\"\n}",
+							"raw": "{\n    \"userName\":\"admin\",\n    \"password\":\"Thjnhotwp1@\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -131,7 +131,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"phoneNumber\":\"0923001270\",\n    \"customerName\":\"Lê Duy Thịnh\",\n    \"type\":0\n}",
+							"raw": "{\n    \"phoneNumber\":\"0923001271\",\n    \"customerName\":\"Lê Duy Thịnh\",\n    \"bedId\":2,\n    \"typeTicket\":1\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -189,7 +189,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"phoneNumber\":\"0923001270\",\n    \"customerName\":\"Lê Duy Thịnh\",\n    \"type\":0\n}",
+							"raw": "{\n    \"phoneNumber\":\"0923001270\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -235,6 +235,220 @@
 							"path": [
 								"customer",
 								"update"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "BedService",
+			"item": [
+				{
+					"name": "Get all room",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/room/get-all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"room",
+								"get-all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add room",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"roomName\": \"Phòng 2\",\n    \"bedNumber\": \"10\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/room/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"room",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update room",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"id\": 3,\n        \"roomName\": \"Phòng 3\",\n        \"bedNumber\": 10,\n        \"beds\": [],\n        \"active\": true\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/room/update",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"room",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete room",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"id\": 3\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/room/delete",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"room",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all bed",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/bed/get-all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"bed",
+								"get-all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add bed",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"roomId\": 1,\n    \"bedName\":\"Box 3\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/bed/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"bed",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Hire Bed Day",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/bed/hire",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"bed",
+								"hire"
 							]
 						}
 					},
