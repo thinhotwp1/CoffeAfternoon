@@ -45,7 +45,6 @@ public class TicketService {
             ModelMapper modelMapper = new ModelMapper();
             Ticket ticket = modelMapper.map(message, Ticket.class);
             Date date = new Date();
-            ticket.setLastUpdate(date.toString());
             SystemLog.log("Save ticket: " + ticket, TypeLog.INFO);
             ticketRepo.saveAndFlush(ticket);
 

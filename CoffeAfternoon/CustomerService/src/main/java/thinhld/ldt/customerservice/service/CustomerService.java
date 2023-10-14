@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import thinhld.ldt.customerservice.conmon.model.Message;
 import thinhld.ldt.customerservice.conmon.model.TicketMessage;
 import thinhld.ldt.customerservice.log.SystemLog;
@@ -17,6 +18,7 @@ import thinhld.ldt.customerservice.model.Customer;
 import thinhld.ldt.customerservice.model.CustomerRequest;
 import thinhld.ldt.customerservice.model.CustomerResponse;
 import thinhld.ldt.customerservice.repository.CustomerRepo;
+import thinhld.ldt.customerservice.rest.RestClient;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -36,6 +38,11 @@ public class CustomerService {
 
     @Autowired
     CustomerRepo customerRepo;
+
+    @Autowired
+    private RestClient restClient;
+
+    private final String urlAddTicket = "localhost:8081/add-ticket";
 
     /**
      * @return list Customer in database
@@ -62,7 +69,7 @@ public class CustomerService {
             // validate customer
             if (!customerRepo.findCustomersByPhoneNumberContains(customerRequest.getPhoneNumber()).isEmpty()) {
                 SystemLog.log("Add Customer - Exited Customer with phone number:" + customerRequest.getPhoneNumber(), TypeLog.INFO);
-                return new ResponseEntity<>("Đã tồn tại khách hàng đã đăng ký bằng số điện thoại " + customerRequest.getPhoneNumber(), HttpStatus.ALREADY_REPORTED);
+                return new ResponseEntity<>("Đã tồn tại khách hàng đã đăng ký bằng số điện thoại " + customerRequest.getPhoneNumber(), HttpStatus.BAD_REQUEST);
             }
             // Add customer
 
@@ -74,7 +81,7 @@ public class CustomerService {
             // Cộng thêm số tháng theo loại vé vào Calendar
             calendar.add(Calendar.MONTH, customerRequest.getTypeTicket());
             Customer customer = customerRequest.convertDTO(customerRequest);
-            customer.setDateTicket(calendar);
+//            customer.setDateTicket(calendar);
 
             customerRepo.save(customer);
             SystemLog.log("Success Added Customer: " + customerRequest,TypeLog.INFO);
@@ -83,7 +90,13 @@ public class CustomerService {
             ModelMapper modelMapper = new ModelMapper();
             TicketMessage ticketMessage = modelMapper.map(customer, TicketMessage.class);
             ticketMessage.setDateTicket(calendar);
+
+            //Send rabbit
             sendRabbit(ticketMessage);
+
+            // Rest API
+            restClient.setUrl(urlAddTicket);
+            restClient.postObject(ticketMessage, Object.class);
             SystemLog.log("Send message to ticket service, data: " + ticketMessage,TypeLog.INFO);
 
             return new ResponseEntity<>("Thêm thành công khách hàng " + customerRequest.getCustomerName() + " với số điện thoại " + customerRequest.getPhoneNumber(), HttpStatus.OK);
@@ -93,6 +106,7 @@ public class CustomerService {
             return new ResponseEntity<>("Có lỗi trong quá trình thêm khách hàng ! \nDetail: " + e, HttpStatus.EXPECTATION_FAILED);
         }
     }
+
 
 
     /**

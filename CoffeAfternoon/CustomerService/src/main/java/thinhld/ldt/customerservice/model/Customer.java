@@ -24,10 +24,6 @@ public class Customer extends BaseEntity{
     private String bedId;
     @Column(name = "ticketId")
     private int ticketId;
-    @Column(name = "typeTicket")
-    private int typeTicket;
-    @Column(name = "dateTicket")
-    private Calendar dateTicket;
 
     /**
      * API hire bed

@@ -34,15 +34,4 @@ public class Ticket {
      * 2. from bed service: update phone number to id_customer and date ticket to bed_id
      *
      */
-
-    @Column(name = "isDelete")
-    private boolean isDelete = false;
-    @Column(name = "lastUpdate")
-    private String lastUpdate ;
-    @Column(name = "userCurrent")
-    private String userCurrent ;
-
-    public Ticket() {
-    }
-
 }

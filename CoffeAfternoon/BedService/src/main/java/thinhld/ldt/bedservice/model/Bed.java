@@ -27,8 +27,6 @@ public class Bed extends BaseEntity{
     // bed using, fixing, need fix
     @Column(name = "dateTicket")
     private Calendar dateTicket;
-    @Column(name = "needFix")
-    private boolean needFix = false;
     @Column(name = "isFixing")
     private boolean isFixing = false;
 
