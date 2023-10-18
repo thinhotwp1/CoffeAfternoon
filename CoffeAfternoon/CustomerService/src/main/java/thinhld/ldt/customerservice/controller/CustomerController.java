@@ -39,14 +39,9 @@ public class CustomerController {
         return customerService.updateCustomer(request);
     }
 
-    @PostMapping("/find-by-name")
-    public ResponseEntity<?> findCustomersByName(@RequestBody CustomerRequest request) {
-        return customerService.findCustomersByName(request);
-    }
-
-    @PostMapping("/find-by-phone")
-    public ResponseEntity<?> findCustomersByPhone(@RequestBody CustomerRequest request) {
-        return customerService.findCustomersByPhone(request);
+    @PostMapping("/find-by-phone-or-name")
+    public ResponseEntity<?> findCustomersByPhoneOrName(@RequestBody CustomerRequest request) {
+        return customerService.findCustomersByPhoneOrName(request);
     }
 
 }

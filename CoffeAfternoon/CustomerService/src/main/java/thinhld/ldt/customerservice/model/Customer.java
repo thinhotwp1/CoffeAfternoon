@@ -22,8 +22,8 @@ public class Customer extends BaseEntity{
     private String customerName;
     @Column(name = "bedId")
     private String bedId;
-    @Column(name = "ticketId")
-    private int ticketId;
+    @Column(name = "ticketType")
+    private int ticketType;
 
     /**
      * API hire bed

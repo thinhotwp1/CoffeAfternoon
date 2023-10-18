@@ -24,7 +24,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import static thinhld.ldt.customerservice.config.RabbitMQConfiguration.ROUTING_CUSTOMER;
+//import static thinhld.ldt.customerservice.config.RabbitMQConfiguration.ROUTING_CUSTOMER;
 
 
 @Service
@@ -33,8 +33,8 @@ public class CustomerService {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
-    @Autowired
-    private TopicExchange customer_exchange;
+//    @Autowired
+//    private TopicExchange customer_exchange;
 
     @Autowired
     CustomerRepo customerRepo;
@@ -53,6 +53,7 @@ public class CustomerService {
             CustomerResponse customerResponse = new CustomerResponse();
             return new ResponseEntity<>(customerResponse.convertDTO(customerRepo.findAll()), HttpStatus.OK);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>("Xảy ra lỗi trong quá trình lấy list khách hàng", HttpStatus.OK);
         }
     }
@@ -66,8 +67,11 @@ public class CustomerService {
      */
     public ResponseEntity<?> addCustomer(CustomerRequest customerRequest) {
         try {
+            if(customerRequest.getPhoneNumber().length()!=10){
+                return new ResponseEntity<>("Số điện thoại không hợp lệ !", HttpStatus.OK);
+            }
             // validate customer
-            if (!customerRepo.findCustomersByPhoneNumberContains(customerRequest.getPhoneNumber()).isEmpty()) {
+            if (!customerRepo.findCustomersByPhoneNumber(customerRequest.getPhoneNumber()).isEmpty()) {
                 SystemLog.log("Add Customer - Exited Customer with phone number:" + customerRequest.getPhoneNumber(), TypeLog.INFO);
                 return new ResponseEntity<>("Đã tồn tại khách hàng đã đăng ký bằng số điện thoại " + customerRequest.getPhoneNumber(), HttpStatus.BAD_REQUEST);
             }
@@ -87,17 +91,17 @@ public class CustomerService {
             SystemLog.log("Success Added Customer: " + customerRequest,TypeLog.INFO);
 
             //Map object
-            ModelMapper modelMapper = new ModelMapper();
-            TicketMessage ticketMessage = modelMapper.map(customer, TicketMessage.class);
-            ticketMessage.setDateTicket(calendar);
+//            ModelMapper modelMapper = new ModelMapper();
+//            TicketMessage ticketMessage = modelMapper.map(customer, TicketMessage.class);
+//            ticketMessage.setDateTicket(calendar);
+//
+//            //Send rabbit
+//            sendRabbit(ticketMessage);
 
-            //Send rabbit
-            sendRabbit(ticketMessage);
-
-            // Rest API
-            restClient.setUrl(urlAddTicket);
-            restClient.postObject(ticketMessage, Object.class);
-            SystemLog.log("Send message to ticket service, data: " + ticketMessage,TypeLog.INFO);
+//            // Rest API
+//            restClient.setUrl(urlAddTicket);
+//            restClient.postObject(ticketMessage, Object.class);
+//            SystemLog.log("Send message to ticket service, data: " + ticketMessage,TypeLog.INFO);
 
             return new ResponseEntity<>("Thêm thành công khách hàng " + customerRequest.getCustomerName() + " với số điện thoại " + customerRequest.getPhoneNumber(), HttpStatus.OK);
 
@@ -119,11 +123,12 @@ public class CustomerService {
 
     public ResponseEntity<?> deleteCustomer(Customer customerRequest) {
         try {
-            List<Customer> customerList = customerRepo.findCustomersByPhoneNumberContains(customerRequest.getPhoneNumber());
-            if (!customerList.isEmpty()) {
-                return new ResponseEntity<>("Không thể xóa khách hàng này vì vé tháng đang còn hạn sử dụng !", HttpStatus.EXPECTATION_FAILED);
+            if(customerRepo.findById(customerRequest.getPhoneNumber()).isPresent()){
+                customerRepo.deleteById(customerRequest.getPhoneNumber());
+                return new ResponseEntity<>("Xóa thành công khách hàng có số điện thoại: " + customerRequest.getPhoneNumber(), HttpStatus.EXPECTATION_FAILED);
+            }else {
+                return new ResponseEntity<>("Không tìm thấy khách hàng với số điện thoại: " + customerRequest.getPhoneNumber(), HttpStatus.EXPECTATION_FAILED);
             }
-            return new ResponseEntity<>("Không tìm thấy khách hàng với số điện thoại: " + customerRequest.getPhoneNumber(), HttpStatus.EXPECTATION_FAILED);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("Có lỗi trong quá trình xóa khách hàng ! \nDetail: " + e, HttpStatus.EXPECTATION_FAILED);
@@ -138,7 +143,7 @@ public class CustomerService {
      */
     public ResponseEntity<?> updateCustomer(Customer customerRequest) {
         try {
-            List<Customer> customerList = customerRepo.findCustomersByPhoneNumberContains(customerRequest.getPhoneNumber());
+            List<Customer> customerList = customerRepo.findCustomersByPhoneNumber(customerRequest.getPhoneNumber());
             if (!customerList.isEmpty()) {
                 customerRepo.delete(customerList.get(0));
                 customerRepo.save(customerRequest);
@@ -158,33 +163,19 @@ public class CustomerService {
      * @param customerRequest
      * @return list customer if success or error if exception
      */
-    public ResponseEntity<?> findCustomersByName(CustomerRequest customerRequest) {
+    public ResponseEntity<?> findCustomersByPhoneOrName(CustomerRequest customerRequest) {
         try {
             CustomerResponse customerResponse = new CustomerResponse();
-            return new ResponseEntity<>(customerResponse.convertDTO(customerRepo.findCustomersByCustomerNameContains(customerRequest.getCustomerName())), HttpStatus.OK);
+            return new ResponseEntity<>(customerResponse.convertDTO(customerRepo.findCustomersByPhoneNumberContainsAndCustomerNameContains(customerRequest.getPhoneNumber(),customerRequest.getCustomerName())), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("Lỗi trong quá trình tìm kiếm khách hàng !\nDetail: " + e, HttpStatus.EXPECTATION_FAILED);
         }
     }
 
-    /**
-     * @param customerRequest
-     * @return list customer if success or error if exception
-     */
-    public ResponseEntity<?> findCustomersByPhone(CustomerRequest customerRequest) {
-        try {
-            CustomerResponse customerResponse = new CustomerResponse();
-            return new ResponseEntity<>(customerResponse.convertDTO(customerRepo.findCustomersByPhoneNumberContains(customerRequest.getPhoneNumber())), HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>("Lỗi trong quá trình tìm kiếm khách hàng !\nDetail: " + e, HttpStatus.EXPECTATION_FAILED);
-        }
-    }
-
-    void sendRabbit(TicketMessage message) {
-        message.setTopic("Customer service");
-        rabbitTemplate.convertAndSend(customer_exchange.getName(), ROUTING_CUSTOMER, message);
-    }
+//    void sendRabbit(TicketMessage message) {
+//        message.setTopic("Customer service");
+//        rabbitTemplate.convertAndSend(customer_exchange.getName(), ROUTING_CUSTOMER, message);
+//    }
 
 }

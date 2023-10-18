@@ -30,10 +30,10 @@ public class BedService {
     @Autowired
     BedRepo bedRepo;
 
-    @RabbitListener(queues = "queue.bed.ticket")
-    private void receiveFromCustomerService(TicketMessage message) {
-        updateBedTicket(message);
-    }
+//    @RabbitListener(queues = "queue.bed.ticket")
+//    private void receiveFromCustomerService(TicketMessage message) {
+//        updateBedTicket(message);
+//    }
 
     private void updateBedTicket(TicketMessage message) {
         try {
