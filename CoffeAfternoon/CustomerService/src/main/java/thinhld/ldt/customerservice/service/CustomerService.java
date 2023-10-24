@@ -1,17 +1,9 @@
 package thinhld.ldt.customerservice.service;
 
-import lombok.extern.log4j.Log4j2;
-import org.modelmapper.ModelMapper;
-import org.springframework.amqp.core.TopicExchange;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClientException;
-import thinhld.ldt.customerservice.conmon.model.Message;
-import thinhld.ldt.customerservice.conmon.model.TicketMessage;
 import thinhld.ldt.customerservice.log.SystemLog;
 import thinhld.ldt.customerservice.log.TypeLog;
 import thinhld.ldt.customerservice.model.Customer;
@@ -30,11 +22,6 @@ import java.util.List;
 @Service
 public class CustomerService {
 
-    @Autowired
-    private RabbitTemplate rabbitTemplate;
-
-//    @Autowired
-//    private TopicExchange customer_exchange;
 
     @Autowired
     CustomerRepo customerRepo;

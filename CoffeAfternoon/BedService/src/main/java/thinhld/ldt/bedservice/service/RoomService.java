@@ -16,8 +16,8 @@ import thinhld.ldt.bedservice.repository.RoomRepo;
 @Log4j2(topic = "RoomService")
 public class RoomService {
 
-    @Autowired
-    private RabbitTemplate rabbitTemplate;
+//    @Autowired
+//    private RabbitTemplate rabbitTemplate;
 
     @Autowired
     RoomRepo roomRepo;

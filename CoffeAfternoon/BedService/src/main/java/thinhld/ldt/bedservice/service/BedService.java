@@ -24,8 +24,8 @@ import java.util.List;
 @Service
 public class BedService {
 
-    @Autowired
-    private RabbitTemplate rabbitTemplate;
+//    @Autowired
+//    private RabbitTemplate rabbitTemplate;
 
     @Autowired
     BedRepo bedRepo;
