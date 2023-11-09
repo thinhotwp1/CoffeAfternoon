@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.Calendar;
+import java.util.List;
 
 @Data
 @Entity
@@ -12,11 +13,18 @@ import java.util.Calendar;
 @Table(name = "t_ticket_type")
 public class TicketType {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private long id;
     @Column(name = "typeTicket")
     private int typeTicket;
     @Column(name = "ticketTypeName")
     private String ticketTypeName;
     @Column(name = "price")
     private long price;
+    // one room to many Ticket
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "idTypeTicket")
+    private List<Ticket> ticketList;
 
 }

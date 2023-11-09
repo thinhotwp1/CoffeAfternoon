@@ -22,8 +22,4 @@ public class Report extends BaseEntity{
     private String reportName;
     @Column(name = "description")
     private String description;
-    @Column(name = "start")
-    private Date start;
-    @Column(name = "end")
-    private Date end;
 }

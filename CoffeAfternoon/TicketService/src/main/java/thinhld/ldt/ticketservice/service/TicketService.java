@@ -76,19 +76,19 @@ public class TicketService {
         if (requestReport.getTypeReport() == MonthReport.MONTH_REPORT.getMoth()) {
             List<Ticket> ticketList = ticketRepo.findAll();
             Map<String, Long> map = new HashMap<>(); // Map: type ticket/total money for that type ticket
-            for (Ticket ticket : ticketList) {
-                TicketType typeTicket = ticket.getTypeTicket();
-
-                if (typeTicket != null) {
-
-                    // map data
-                    if (map.get(typeTicket.getTypeTicket()) == null) {
-                        map.put(String.valueOf(typeTicket.getTypeTicket()), typeTicket.getPrice());
-                    } else {
-                        map.replace(String.valueOf(typeTicket.getTypeTicket()), map.get(typeTicket.getTypeTicket()) + typeTicket.getPrice());
-                    }
-                }
-            }
+//            for (Ticket ticket : ticketList) {
+//                TicketType typeTicket = ticket.getTypeTicket();
+//
+//                if (typeTicket != null) {
+//
+//                    // map data
+//                    if (map.get(typeTicket.getTypeTicket()) == null) {
+//                        map.put(String.valueOf(typeTicket.getTypeTicket()), typeTicket.getPrice());
+//                    } else {
+//                        map.replace(String.valueOf(typeTicket.getTypeTicket()), map.get(typeTicket.getTypeTicket()) + typeTicket.getPrice());
+//                    }
+//                }
+//            }
 
             responseReport.setTypeReport(MonthReport.MONTH_REPORT.getMoth());
             if (!map.isEmpty()) responseReport.setDetails(map);

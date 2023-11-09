@@ -1,8 +1,5 @@
 package thinhld.ldt.bedservice.service;
 
-import lombok.extern.log4j.Log4j2;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +35,7 @@ public class BedService {
     private void updateBedTicket(TicketMessage message) {
         try {
             Bed bed = bedRepo.findByIdIs(message.getBedId());
-            bed.setCustomerId(message.getPhoneNumber());
+            bed.setPhoneNumber(message.getPhoneNumber());
             bed.setDateTicket(message.getDateTicket());
             bedRepo.saveAndFlush(bed);
             SystemLog.log("Success update bed ticket date with ticket message from ticket service: " + message, TypeLog.INFO);

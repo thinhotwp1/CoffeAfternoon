@@ -12,19 +12,16 @@ import java.util.Calendar;
 @Table(name = "t_ticket")
 public class Ticket {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private long id;
+    @Column(name = "idTypeTicket")
+    private long idTypeTicket;
     @Column(name = "phoneNumber")
     private String phoneNumber;
-    @Column(name = "customerName")
-    private String customerName;
     @Column(name = "bedId")
     private String bedId;
-    // one ticket to one ticketType
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "typeTicket")
-    private TicketType typeTicket;     // int month
     @Column(name = "dateTicket")
     private Calendar dateTicket;
-    @Column(name = "price")
-    private long price;
 
 }

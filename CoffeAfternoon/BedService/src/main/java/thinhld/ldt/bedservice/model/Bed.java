@@ -3,11 +3,13 @@ package thinhld.ldt.bedservice.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Calendar;
 
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "t_bed"
         , indexes = {@Index(name = "idx_bed", columnList = "id")}
 )
@@ -21,22 +23,12 @@ public class Bed extends BaseEntity{
     private long roomId;
     @Column(name = "bedName")
     private String bedName;
-    @Column(name = "customerId")
-    private String customerId;
+    @Column(name = "phoneNumber")
+    private String phoneNumber;
 
     // bed using, fixing, need fix
     @Column(name = "dateTicket")
     private Calendar dateTicket;
     @Column(name = "isFixing")
     private boolean isFixing = false;
-
-
-    public Bed() {
-    }
-
-    public Bed(long roomId, String bedName) {
-        this.roomId = roomId;
-        this.bedName = bedName;
-    }
-
 }
