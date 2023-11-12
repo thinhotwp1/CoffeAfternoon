@@ -8,6 +8,7 @@ import thinhld.ldt.bedservice.model.dto.RoomRequest;
 import thinhld.ldt.bedservice.service.RoomService;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/room")
 public class RoomController {
     @Autowired

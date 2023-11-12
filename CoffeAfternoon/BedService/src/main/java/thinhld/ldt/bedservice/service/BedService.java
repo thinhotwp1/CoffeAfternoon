@@ -4,12 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import thinhld.ldt.bedservice.conmon.model.TicketMessage;
 import thinhld.ldt.bedservice.log.SystemLog;
 import thinhld.ldt.bedservice.log.TypeLog;
 import thinhld.ldt.bedservice.model.Bed;
 import thinhld.ldt.bedservice.model.dto.BedRequest;
-import thinhld.ldt.bedservice.model.dto.ListBedHire;
+import thinhld.ldt.bedservice.model.dto.HireBed;
 import thinhld.ldt.bedservice.repository.BedRepo;
 
 import java.util.ArrayList;
@@ -27,23 +26,18 @@ public class BedService {
     @Autowired
     BedRepo bedRepo;
 
-//    @RabbitListener(queues = "queue.bed.ticket")
-//    private void receiveFromCustomerService(TicketMessage message) {
-//        updateBedTicket(message);
+//    private void updateBedTicket(TicketMessage message) {
+//        try {
+//            Bed bed = bedRepo.findByIdIs(message.getBedId());
+//            bed.setPhoneNumber(message.getPhoneNumber());
+//            bed.setDateTicket(message.getDateTicket());
+//            bedRepo.saveAndFlush(bed);
+//            SystemLog.log("Success update bed ticket date with ticket message from ticket service: " + message, TypeLog.INFO);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            SystemLog.log("Error update ticket date with ticket message from ticket service: " + message, TypeLog.INFO);
+//        }
 //    }
-
-    private void updateBedTicket(TicketMessage message) {
-        try {
-            Bed bed = bedRepo.findByIdIs(message.getBedId());
-            bed.setPhoneNumber(message.getPhoneNumber());
-            bed.setDateTicket(message.getDateTicket());
-            bedRepo.saveAndFlush(bed);
-            SystemLog.log("Success update bed ticket date with ticket message from ticket service: " + message, TypeLog.INFO);
-        } catch (Exception e) {
-            e.printStackTrace();
-            SystemLog.log("Error update ticket date with ticket message from ticket service: " + message, TypeLog.INFO);
-        }
-    }
 
     /**
      * @return list Bed in database
@@ -52,9 +46,6 @@ public class BedService {
     public ResponseEntity<?> getAllBed() {
         try {
             List<Bed> bedList = bedRepo.findAll();
-            ListBedHire listBedHire = new ListBedHire();
-            List<Bed> listActive = new ArrayList<>();
-            List<Bed> listUsed = new ArrayList<>();
 
             // Get all bed used and active
             Calendar calendarCurrent = Calendar.getInstance();
@@ -63,15 +54,13 @@ public class BedService {
 
             for (Bed bed : bedList) {
                 if (bed.getDateTicket() != null && bed.getDateTicket().after(calendarCurrent)) {
-                    listUsed.add(bed);
+                    bed.setUsing(true);
                 } else {
-                    listActive.add(bed);
+                    bed.setUsing(false);
                 }
             }
-            listBedHire.setListUsed(listUsed);
-            listBedHire.setListActive(listActive);
 
-            return new ResponseEntity<>(listBedHire, HttpStatus.OK);
+            return new ResponseEntity<>(bedList, HttpStatus.OK);
         } catch (Exception e) {
             SystemLog.log("Error get all box: " + e, TypeLog.INFO);
             return new ResponseEntity<>("Xảy ra lỗi trong quá trình lấy danh sách giường !", HttpStatus.EXPECTATION_FAILED);
@@ -111,7 +100,27 @@ public class BedService {
             return new ResponseEntity<>("Thuê thành công box " + bed.getBedName() + ", thời gian sử dụng còn 4 giờ. ", HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>("Xảy ra lỗi trong quá trình thuê box "+ e, HttpStatus.EXPECTATION_FAILED);
+            return new ResponseEntity<>("Xảy ra lỗi trong quá trình thuê box " + e, HttpStatus.EXPECTATION_FAILED);
+        }
+    }
+
+    public ResponseEntity<?> hireBedMonth(HireBed request) {
+        try {
+            // set time ticket-month
+            Bed bed = bedRepo.findByIdIs(request.getId());
+
+            Date currentTime = new Date();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(currentTime);
+            // Cộng thêm số giờ cho vé ngày
+            calendar.add(Calendar.DAY_OF_MONTH, request.getTicketDate());
+            bed.setDateTicket(calendar);
+
+            bedRepo.saveAndFlush(bed);
+            return new ResponseEntity<>("Thuê thành công " + bed.getBedName() + ", thời gian sử dụng: " + request.getTicketDate() + " ngày !", HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Xảy ra lỗi trong quá trình thuê box " + e, HttpStatus.EXPECTATION_FAILED);
         }
     }
 

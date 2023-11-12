@@ -12,8 +12,8 @@ import java.util.List;
 public class RoomResponse {
     private long id;
     private String roomName;
-    private int bedNumber;
-    private boolean isActive = true;
+    private String roomType;
+    private boolean isActive;
     private List<Bed> beds;
 
     public RoomResponse() {

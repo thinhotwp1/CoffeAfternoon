@@ -23,5 +23,6 @@ public class Ticket {
     private String bedId;
     @Column(name = "dateTicket")
     private Calendar dateTicket;
-
+    @Column(name = "price")
+    private long price;
 }

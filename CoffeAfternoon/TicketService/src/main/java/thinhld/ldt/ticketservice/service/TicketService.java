@@ -13,10 +13,7 @@ import thinhld.ldt.ticketservice.log.SystemLog;
 import thinhld.ldt.ticketservice.log.TypeLog;
 import thinhld.ldt.ticketservice.model.Ticket;
 import thinhld.ldt.ticketservice.model.TicketType;
-import thinhld.ldt.ticketservice.model.dto.MonthReport;
-import thinhld.ldt.ticketservice.model.dto.QuarterReport;
-import thinhld.ldt.ticketservice.model.dto.RequestReport;
-import thinhld.ldt.ticketservice.model.dto.ResponseReport;
+import thinhld.ldt.ticketservice.model.dto.*;
 import thinhld.ldt.ticketservice.repository.TicketRepo;
 import thinhld.ldt.ticketservice.repository.TicketTypeRepo;
 
@@ -53,7 +50,8 @@ public class TicketService {
 
     public ResponseEntity<?> addTypeTicket(TicketType ticketType) {
         try {
-            return ResponseEntity.ok(ticketTypeRepo.saveAndFlush(ticketType));
+            ticketTypeRepo.saveAndFlush(ticketType);
+            return ResponseEntity.ok("Thêm thành công" + ticketType.getTicketTypeName());
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("Xảy ra lỗi trong quá trình xử lý !", HttpStatus.OK);
@@ -62,7 +60,7 @@ public class TicketService {
 
     public ResponseEntity<?> deleteTypeTicket(TicketType ticketType) {
         try {
-            ticketTypeRepo.deleteById(String.valueOf(ticketType.getTypeTicket()));
+            ticketTypeRepo.delete(ticketType);
             return ResponseEntity.ok("Xóa thành công");
         } catch (Exception e) {
             e.printStackTrace();
@@ -100,9 +98,10 @@ public class TicketService {
         throw new RuntimeException("Vui lòng chọn đúng loại báo cáo cần lấy !");
     }
 
-    public ResponseEntity<?> addTicketTest(Ticket request) {
+    public ResponseEntity<?> addTicketTest(TicketRequest request) {
         try {
-            ticketRepo.saveAndFlush(request);
+            TicketRequest ticketRequest = new TicketRequest();
+            ticketRepo.saveAndFlush(ticketRequest.convertDTO(request));
             return ResponseEntity.ok("Thành công !");
         } catch (Exception e) {
             e.printStackTrace();

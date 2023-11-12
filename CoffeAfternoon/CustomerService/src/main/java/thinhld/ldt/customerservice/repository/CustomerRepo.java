@@ -8,10 +8,11 @@ import java.util.List;
 
 @Repository
 public interface CustomerRepo extends JpaRepository<Customer, String> {
+    List<Customer> findCustomersByOrderByCreateDateDesc();
 
     List<Customer> findCustomersByPhoneNumber(String phone);
 
-    List<Customer> findCustomersByPhoneNumberContainsAndCustomerNameContains(String name,String phone);
+    List<Customer> findCustomersByPhoneNumberContainsAndCustomerNameContains(String name, String phone);
 
 
 }

@@ -25,7 +25,7 @@ public class Room extends BaseEntity{
     @Column(name = "roomType")
     private String roomType;
     @Column(name = "isActive")
-    private boolean isActive = true;
+    private boolean isActive;
     // one room to many bed
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "room_id")

@@ -12,8 +12,8 @@ import java.util.Date;
 public class CustomerRequest {    
     private String phoneNumber;
     private String customerName;
-    private int typeTicket;
-    private Long bedId;
+    private long typeTicketId;
+    private long bedId;
 
     public Customer convertDTO(CustomerRequest request) {
         // Map value CustomerRequest to customer

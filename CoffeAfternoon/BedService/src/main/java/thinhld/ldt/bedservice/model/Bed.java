@@ -23,12 +23,11 @@ public class Bed extends BaseEntity{
     private long roomId;
     @Column(name = "bedName")
     private String bedName;
-    @Column(name = "phoneNumber")
-    private String phoneNumber;
-
     // bed using, fixing, need fix
     @Column(name = "dateTicket")
     private Calendar dateTicket;
     @Column(name = "isFixing")
     private boolean isFixing = false;
+    @Column(name = "isUsing")
+    private boolean isUsing = false;
 }

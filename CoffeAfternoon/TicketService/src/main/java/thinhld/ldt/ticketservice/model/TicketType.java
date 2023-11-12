@@ -16,10 +16,10 @@ public class TicketType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;
-    @Column(name = "typeTicket")
-    private int typeTicket;
     @Column(name = "ticketTypeName")
     private String ticketTypeName;
+    @Column(name = "dateTicket")
+    private int dateTicket;
     @Column(name = "price")
     private long price;
     // one room to many Ticket

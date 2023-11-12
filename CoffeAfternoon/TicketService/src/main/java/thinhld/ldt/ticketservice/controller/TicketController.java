@@ -1,18 +1,18 @@
 package thinhld.ldt.ticketservice.controller;
 
-import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import thinhld.ldt.ticketservice.model.Ticket;
 import thinhld.ldt.ticketservice.model.TicketType;
 import thinhld.ldt.ticketservice.model.dto.RequestReport;
+import thinhld.ldt.ticketservice.model.dto.TicketRequest;
 import thinhld.ldt.ticketservice.service.TicketService;
 
 
 @RestController
 @RequestMapping("/ticket")
-@Log4j2
+@CrossOrigin
 public class TicketController {
     @Autowired
     TicketService ticketService;
@@ -33,7 +33,7 @@ public class TicketController {
         return ticketService.getReport(requestReport);
     }
     @PostMapping("/add-ticket")
-    public ResponseEntity<?> addTicketTest(@RequestBody Ticket request) {
+    public ResponseEntity<?> addTicketTest(@RequestBody TicketRequest request) {
         return ticketService.addTicketTest(request);
     }
     @GetMapping("/get-ticket")

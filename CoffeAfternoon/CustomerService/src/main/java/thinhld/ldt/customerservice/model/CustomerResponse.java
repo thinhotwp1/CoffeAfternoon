@@ -12,9 +12,6 @@ import java.util.List;
 public class CustomerResponse {
     private String phoneNumber;
     private String customerName;
-    private String lastUpdate;
-    private String userCurrent;
-    private int typeTicket;
     private String bedId;
     private int ticketId;
     private Calendar dateTicket;

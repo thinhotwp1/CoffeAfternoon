@@ -22,17 +22,9 @@ public class Customer extends BaseEntity{
     private String customerName;
     @Column(name = "bedId")
     private String bedId;
-    @Column(name = "ticketType")
-    private int ticketType;
-
-    /**
-     * API hire bed
-     * 1. from customer service update bed_id in customer => send " phoneNumber and typeTicket"
-     * to ticket service =>
-     * ticket service: add new a ticket with type and phone number customer in message
-     * (if step 1 fail send to bed service to cancel update bed object)
-     * 2. from bed service: update phone number to id_customer and date ticket to bed_id
-     *
-     */
+    @Column(name = "typeTicketId")
+    private long typeTicketId;
+    @Column(name = "ticketId")
+    private long ticketId;
 
 }

@@ -43,7 +43,6 @@ public class RoomService {
     public ResponseEntity<?> addRoom(RoomRequest roomRequest) {
         try {
             Room room = roomRequest.convertDTO(roomRequest);
-            room.setActive(true);
             roomRepo.save(room);
             return new ResponseEntity<>("Thêm thành công " + roomRequest.getRoomName(), HttpStatus.OK);
         } catch (Exception e) {
