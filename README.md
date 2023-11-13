@@ -6,11 +6,7 @@ Yêu cầu cài đặt các service:
 
 #Mysql:
 user: blog, pass: blog
-database: coffeafternoon
-
-#RabbitMQ:
-Service running
-http://localhost:15672 is running
+database: blog
 
 
 a, Xác định yêu cầu (Được triển khai với microservice với các module chính sau, sẽ cập nhật ):
